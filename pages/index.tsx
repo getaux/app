@@ -1,7 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
-import auctions from '../data/auctions.json'
 import {
   Usdc,
   Gods,
@@ -12,10 +11,18 @@ import {
   Cancelled,
   Watch,
   Logo,
+  Gradient,
+  ExternalLink,
 } from '../components/icons'
 import { capitalizeFirstLetter, forHumans } from '../utils'
+import Button from '../components/button'
+import useSWR from 'swr'
+import { AuctionResponse, AuctionResult } from '../types/auction'
 
-export const getPriceIcon = (type: string) => {
+const log = console.log
+const Spacer = () => <div className="mb-2"></div>
+
+const getPriceIcon = (type: string) => {
   let icon
   switch (type) {
     case 'ETH':
@@ -59,11 +66,23 @@ export const getStatusIcon = (type: string) => {
   return icon
 }
 
+const useAuction = () => {
+  const fetcher = (url: string) => fetch(url).then((r) => r.json())
+  const { data, error } = useSWR<AuctionResponse, any>(
+    'https://getaux-staging.imxrarity.io/v1/auctions',
+    fetcher
+  )
+
+  return { data, error, isLoading: !data && !error }
+}
+
 const Home: NextPage = () => {
+  const { data } = useAuction()
+
   return (
-    <div className="flex h-full flex-col bg-white">
+    <div className="animate-fade">
       <Head>
-        <title>Create Next App</title>
+        <title>AuctionX</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -75,24 +94,58 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <main className="mx-auto max-w-4xl">
-        <div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
-          {auctions.result.map((order: any, i: any) => {
-            return (
-              <Product
-                ending={order.endAt}
-                src={order.asset.imageUrl}
-                name={order.asset.name}
-                priceIcon={getPriceIcon(order.tokenType)}
-                statusIcon={getStatusIcon(order.status)}
-                statusText={capitalizeFirstLetter(order.status)}
-                price={String(
-                  (order.quantity / parseFloat(`1e${order.decimals}`)).toFixed(
-                    2
-                  )
-                )}
-              />
-            )
+      <main className="relative mx-auto mx-auto flex max-w-4xl max-w-4xl flex-col justify-center px-4 pb-32">
+        <div
+          style={{
+            zIndex: 0,
+            left: '50%',
+            top: '250px',
+            transform: 'translate(-50%, -50%)',
+          }}
+          className="absolute"
+        >
+          <Gradient />
+        </div>
+        <div className="z-50 flex flex-col py-36">
+          <div className="flex flex-col items-center justify-center text-center">
+            <Logo size={'120px'} />
+            <div className="my-2 flex items-center">
+              <span
+                className="ml-2 text-6xl font-extrabold"
+                style={{ fontFamily: 'GT Walsheim' }}
+              >
+                Auctions for Immutable X are here.
+              </span>
+            </div>
+            <Spacer />
+            <Spacer />
+            <span className="mb-2 text-xl text-gray-500">
+              Together with snoopy, imxrarity, and the immutable x team,
+              auctions are now active
+            </span>
+          </div>
+          <Spacer />
+          <Spacer />
+          <Spacer />
+
+          <div className="justify-centerr flex flex-col items-center">
+            <Button
+              type={'success'}
+              scale={1.5}
+              iconRight={<ExternalLink />}
+              type="secondary"
+            >
+              Random auction
+            </Button>
+            <Spacer />
+            <Spacer />
+          </div>
+        </div>
+
+        <span className="px-4 text-xl font-bold">Auctions</span>
+        <div className="z-50 grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
+          {data?.result?.map((item: AuctionResult) => {
+            return <Product item={item} />
           })}
         </div>
       </main>
@@ -100,24 +153,18 @@ const Home: NextPage = () => {
   )
 }
 
-const Product = ({
-  src,
-  name,
+const Product = ({ item }: { item: AuctionResult }) => {
+  const {
+    status,
+    endAt,
+    quantity,
+    tokenType,
+    decimals,
+    asset: { imageUrl, name },
+  } = item
 
-  price,
-  ending,
-  priceIcon,
-  statusIcon,
-  statusText,
-}: {
-  src: string
-  name: string
-  price: string
-  ending: string
-  priceIcon: any
-  statusIcon: any
-  statusText: string
-}) => {
+  let price = Number(quantity) / parseFloat(`1e${Number(decimals)}`)
+
   return (
     <div
       className={`cursor-pointer rounded-lg border bg-white p-3 shadow-sm transition-all hover:border-pink-200 hover:bg-pink-50`}
@@ -126,30 +173,28 @@ const Product = ({
         <span className="elipsis mb-2 text-xs text-gray-400">{name}</span>
 
         <div className="mb-2 flex items-center">
-          {statusIcon}
-          <span className="elipsis ml-1.5 text-xs text-gray-400">
-            {statusText}
-          </span>
+          {getStatusIcon(status)}
+          <span className="elipsis ml-1.5 text-xs text-gray-400">{status}</span>
         </div>
 
         <div className=" mb-2 flex items-center" style={{ marginLeft: '-3px' }}>
           <Watch />
           <span className="elipsis ml-1 text-xs text-gray-400">
             {forHumans(
-              (new Date(ending).getTime() - new Date().getTime()) / 1000
+              (new Date(endAt).getTime() - new Date().getTime()) / 1000
             )}
           </span>
         </div>
 
         <div className="mb-0 flex items-center" style={{ marginLeft: '-2px' }}>
-          {priceIcon}
+          {getPriceIcon(tokenType)}
           <span className="elipsis ml-1 text-lg font-bold text-gray-900">
             {price}
           </span>
         </div>
       </div>
 
-      <img className="mt-2 w-full rounded-lg" src={src} />
+      <img className="mt-2 w-full rounded-lg" src={imageUrl} />
     </div>
   )
 }
