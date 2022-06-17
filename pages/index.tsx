@@ -1,80 +1,14 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
-import {
-  Usdc,
-  Gods,
-  Eth,
-  Omi,
-  Expired,
-  InProgress,
-  Cancelled,
-  Watch,
-  Logo,
-  Gradient,
-  ExternalLink,
-} from '../components/icons'
-import { capitalizeFirstLetter, forHumans } from '../utils'
-import Button from '../components/button'
-import useSWR from 'swr'
-import { AuctionResponse, AuctionResult } from '../types/auction'
-
-const log = console.log
-const Spacer = () => <div className="mb-2"></div>
-
-const getPriceIcon = (type: string) => {
-  let icon
-  switch (type) {
-    case 'ETH':
-      icon = (() => <Eth size={'20'} />)()
-      break
-    case 'USDC':
-      icon = <Usdc size={'20'} color="black" />
-      break
-    case 'OMI':
-      icon = <Omi size={'20'} color="black" />
-      break
-    case 'GODS':
-      icon = <Gods size={'20'} color="black" />
-      break
-    case 'GOG':
-      icon = <Omi size={'20'} color="black" />
-      break
-    default:
-      break
-  }
-
-  return icon
-}
-
-export const getStatusIcon = (type: string) => {
-  let icon
-  switch (type) {
-    case 'expired':
-      icon = (() => <Expired />)()
-      break
-    case 'active':
-      icon = <InProgress />
-      break
-    case 'cancelled':
-      icon = <Cancelled />
-      break
-    default:
-      break
-  }
-
-  return icon
-}
-
-const useAuction = () => {
-  const fetcher = (url: string) => fetch(url).then((r) => r.json())
-  const { data, error } = useSWR<AuctionResponse, any>(
-    'https://getaux-staging.imxrarity.io/v1/auctions',
-    fetcher
-  )
-
-  return { data, error, isLoading: !data && !error }
-}
+import { Logo, Gradient } from 'components/icons'
+import Button from 'components/button'
+import { AuctionResult } from 'types/auction'
+import { useAuction } from 'hooks'
+import Layout from 'components/layout'
+import Spacer from 'components/spacer'
+import Product from 'components/product'
+import Nav from 'components/nav'
 
 const Home: NextPage = () => {
   const { data } = useAuction()
@@ -86,15 +20,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="border-2 border-b border-gray-50">
-        <div className="mx-auto max-w-4xl">
-          <div className="p-4">
-            <Logo />
-          </div>
-        </div>
-      </div>
+      <Nav />
 
-      <main className="relative mx-auto mx-auto flex max-w-4xl max-w-4xl flex-col justify-center px-4 pb-32">
+      <Layout>
         <div
           style={{
             zIndex: 0,
@@ -141,53 +69,7 @@ const Home: NextPage = () => {
             return <Product item={item} />
           })}
         </div>
-      </main>
-    </div>
-  )
-}
-
-const Product = ({ item }: { item: AuctionResult }) => {
-  const {
-    status,
-    endAt,
-    quantity,
-    tokenType,
-    decimals,
-    asset: { imageUrl, name },
-  } = item
-
-  let price = Number(quantity) / parseFloat(`1e${Number(decimals)}`)
-
-  return (
-    <div
-      className={`cursor-pointer rounded-lg border bg-white p-3 shadow-sm transition-all hover:border-pink-200 hover:bg-pink-50`}
-    >
-      <div className="flex flex-col">
-        <span className="elipsis mb-2 text-xs text-gray-400">{name}</span>
-
-        <div className="mb-2 flex items-center">
-          {getStatusIcon(status)}
-          <span className="elipsis ml-1.5 text-xs text-gray-400">{status}</span>
-        </div>
-
-        <div className=" mb-2 flex items-center" style={{ marginLeft: '-3px' }}>
-          <Watch />
-          <span className="elipsis ml-1 text-xs text-gray-400">
-            {forHumans(
-              (new Date(endAt).getTime() - new Date().getTime()) / 1000
-            )}
-          </span>
-        </div>
-
-        <div className="mb-0 flex items-center" style={{ marginLeft: '-2px' }}>
-          {getPriceIcon(tokenType)}
-          <span className="elipsis ml-1 text-lg font-bold text-gray-900">
-            {price}
-          </span>
-        </div>
-      </div>
-
-      <img className="mt-2 w-full rounded-lg" src={imageUrl} />
+      </Layout>
     </div>
   )
 }
