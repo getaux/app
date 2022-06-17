@@ -129,14 +129,7 @@ const Home: NextPage = () => {
           <Spacer />
 
           <div className="justify-centerr flex flex-col items-center">
-            <Button
-              type={'success'}
-              scale={1.5}
-              iconRight={<ExternalLink />}
-              type="secondary"
-            >
-              Random auction
-            </Button>
+            <Button type={'success'}>Random auction</Button>
             <Spacer />
             <Spacer />
           </div>
