@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 import { useAuction } from 'hooks'
 import useSWR from 'swr'
@@ -7,7 +8,7 @@ import Layout from 'components/layout'
 import { Collection } from 'types/collection'
 import Spacer from 'components/spacer'
 import Product from 'components/product'
-import { AuctionResult } from 'types/auction'
+import { AuctionItem } from 'types/auction'
 import Nav from 'components/nav'
 
 const useCollection = (id: string) => {
@@ -47,7 +48,7 @@ export default function Page() {
 
         <span className="px-4 text-xl font-bold">Auctions</span>
         <div className="z-50 grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
-          {auction?.result?.map((item: AuctionResult) => {
+          {auction?.result?.map((item: AuctionItem) => {
             return <Product item={item} />
           })}
         </div>

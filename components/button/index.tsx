@@ -1,6 +1,6 @@
 // import { Keyboard, Loading } from '@geist-ui/core'
 
-const Button3 = ({
+const Button = ({
   icon,
   children,
   keyboard,
@@ -64,4 +64,4 @@ const Button3 = ({
   )
 }
 
-export default Button3
+export default Button

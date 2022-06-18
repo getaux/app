@@ -1,41 +1,9 @@
-import { AuctionResult } from 'types/auction'
+import { AuctionItem } from 'types/auction'
+import Link from 'next/link'
 
-import {
-  Usdc,
-  Gods,
-  Eth,
-  Omi,
-  Watch,
-  Expired,
-  InProgress,
-  Cancelled,
-} from 'components/icons'
+import { Watch, Expired, InProgress, Cancelled, Done } from 'components/icons'
 import { forHumans } from 'utils'
-
-const getPriceIcon = (type: string) => {
-  let icon
-  switch (type) {
-    case 'ETH':
-      icon = (() => <Eth size={'20'} />)()
-      break
-    case 'USDC':
-      icon = <Usdc size={'20'} color="black" />
-      break
-    case 'OMI':
-      icon = <Omi size={'20'} color="black" />
-      break
-    case 'GODS':
-      icon = <Gods size={'20'} color="black" />
-      break
-    case 'GOG':
-      icon = <Omi size={'20'} color="black" />
-      break
-    default:
-      break
-  }
-
-  return icon
-}
+import getPriceIcon from 'utils/getPriceIcon'
 
 export const getStatusIcon = (type: string) => {
   let icon
@@ -49,6 +17,9 @@ export const getStatusIcon = (type: string) => {
     case 'cancelled':
       icon = <Cancelled />
       break
+    case 'filled':
+      icon = <Done />
+      break
     default:
       break
   }
@@ -56,8 +27,9 @@ export const getStatusIcon = (type: string) => {
   return icon
 }
 
-const Product = ({ item }: { item: AuctionResult }) => {
+const Product = ({ item }: { item: AuctionItem }) => {
   const {
+    id,
     status,
     endAt,
     quantity,
@@ -69,36 +41,43 @@ const Product = ({ item }: { item: AuctionResult }) => {
   let price = Number(quantity) / parseFloat(`1e${Number(decimals)}`)
 
   return (
-    <div
-      className={`cursor-pointer rounded-lg border bg-white p-3 shadow-sm transition-all hover:border-pink-200 hover:bg-pink-50`}
-    >
-      <div className="flex flex-col">
-        <span className="elipsis mb-2 text-xs text-gray-400">{name}</span>
+    <Link href={`/auction/${id}`}>
+      <div
+        className={`cursor-pointer space-y-2 rounded-lg border border-gray-100 bg-white p-5 transition-all hover:border-pink-200 hover:bg-pink-50`}
+      >
+        <div className="flex flex-col space-y-2">
+          <span className="elipsis text-xs text-gray-400">{name}</span>
 
-        <div className="mb-2 flex items-center">
-          {getStatusIcon(status)}
-          <span className="elipsis ml-1.5 text-xs text-gray-400">{status}</span>
+          <div className="flex items-center">
+            {getStatusIcon(status)}
+            <span className="elipsis ml-1.5 text-xs text-gray-400">
+              {status}
+            </span>
+          </div>
+
+          <div className=" flex items-center" style={{ marginLeft: '-3px' }}>
+            <Watch />
+            <span className="elipsis ml-1 text-xs text-gray-400">
+              {forHumans(
+                (new Date(endAt).getTime() - new Date().getTime()) / 1000
+              )}
+            </span>
+          </div>
+
+          <div
+            className="mb-0 flex items-center"
+            style={{ marginLeft: '-2px' }}
+          >
+            {getPriceIcon(tokenType)}
+            <span className="elipsis ml-1 text-lg font-bold text-gray-900">
+              {price}
+            </span>
+          </div>
         </div>
 
-        <div className=" mb-2 flex items-center" style={{ marginLeft: '-3px' }}>
-          <Watch />
-          <span className="elipsis ml-1 text-xs text-gray-400">
-            {forHumans(
-              (new Date(endAt).getTime() - new Date().getTime()) / 1000
-            )}
-          </span>
-        </div>
-
-        <div className="mb-0 flex items-center" style={{ marginLeft: '-2px' }}>
-          {getPriceIcon(tokenType)}
-          <span className="elipsis ml-1 text-lg font-bold text-gray-900">
-            {price}
-          </span>
-        </div>
+        <img className="w-full rounded-lg" src={imageUrl} />
       </div>
-
-      <img className="mt-2 w-full rounded-lg" src={imageUrl} />
-    </div>
+    </Link>
   )
 }
 

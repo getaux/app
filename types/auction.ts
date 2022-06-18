@@ -15,7 +15,7 @@ export interface AuctionBid {
   createdAt: Date
 }
 
-export interface AuctionResult {
+export interface AuctionItem {
   id: number
   type: string
   status: string
@@ -31,6 +31,6 @@ export interface AuctionResult {
 }
 
 export interface AuctionResponse {
-  result: AuctionResult[]
+  result: AuctionItem[]
   totalResults: number
 }

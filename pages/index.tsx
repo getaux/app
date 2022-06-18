@@ -3,7 +3,7 @@ import Head from 'next/head'
 
 import { Logo, Gradient } from 'components/icons'
 import Button from 'components/button'
-import { AuctionResult } from 'types/auction'
+import { AuctionItem } from 'types/auction'
 import { useAuction } from 'hooks'
 import Layout from 'components/layout'
 import Spacer from 'components/spacer'
@@ -64,8 +64,8 @@ const Home: NextPage = () => {
         </div>
 
         <span className="px-4 text-xl font-bold">Auctions</span>
-        <div className="z-50 grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
-          {data?.result?.map((item: AuctionResult) => {
+        <div className="z-50 grid grid-cols-2 gap-6 p-4 md:grid-cols-3 lg:grid-cols-3">
+          {data?.result?.map((item: AuctionItem) => {
             return <Product item={item} />
           })}
         </div>

@@ -1,3 +1,3 @@
-const Spacer = () => <div className="mb-2"></div>
+const Spacer = () => <span className="mt-4"></span>
 
 export default Spacer
