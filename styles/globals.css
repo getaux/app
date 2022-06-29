@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+span.nextui-button-icon.nextui-button-icon-right {
+  display: none;
+}

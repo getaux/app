@@ -1,8 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { Button } from '@nextui-org/react'
 
 import { Logo, Gradient } from 'components/icons'
-import Button from 'components/button'
+// import Button from 'components/button'
 import { AuctionItem } from 'types/auction'
 import { useAuction } from 'hooks'
 import Layout from 'components/layout'

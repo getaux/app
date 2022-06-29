@@ -15,10 +15,16 @@ export interface AuctionBid {
   createdAt: Date
 }
 
+export enum AuctionStatus {
+  Active = 'active',
+  Cancelled = 'cancelled',
+  Filled = 'filled',
+}
+
 export interface AuctionItem {
   id: number
   type: string
-  status: string
+  status: AuctionStatus
   transferId: string
   quantity: string
   decimals: number
