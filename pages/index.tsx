@@ -33,7 +33,7 @@ const Home: NextPage = () => {
           }}
           className="absolute"
         >
-          <Gradient />
+          {/* <Gradient /> */}
         </div>
         <div className="z-50 flex flex-col py-36">
           <div className="flex flex-col items-center justify-center text-center">
