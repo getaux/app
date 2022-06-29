@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { format } from 'date-fns'
 import Link from 'next/link'
-import { Button, Loading } from '@nextui-org/react'
+import { Button, Loading, Image } from '@nextui-org/react'
 
 import { forHumans } from 'utils'
 import fetcher from 'utils/fetcher'
@@ -96,7 +96,23 @@ export default function Page() {
 
       <Layout>
         <div className="mt-24 grid grid-cols-1 space-x-12 lg:grid-cols-2">
-          <img className="w-full rounded-lg" src={auction?.asset?.imageUrl} />
+          <Image
+            showSkeleton
+            width={400}
+            height={400}
+            maxDelay={10000}
+            css={{ borderRadius: '8px' }}
+            src={`http://www.deelay.me/250/${auction?.asset?.imageUrl}`}
+            //src="http://www.deelay.me/10000/https://github.com/nextui-org/nextui/blob/next/apps/docs/public/nextui-banner.jpeg?raw=true"
+            //alt="Default Image"
+          />
+          {/* <Image
+            // width={'400px'}
+            // height={'400px'}
+            showSkeleton
+            className="w-full rounded-lg"
+            src={auction?.asset?.imageUrl}
+          /> */}
 
           <div className="mt-12 flex flex-col items-center lg:mt-0 lg:items-start">
             <div className="flex w-full items-center justify-between">
@@ -170,14 +186,18 @@ export default function Page() {
                 )}
               </div>
 
-              <div className="">
-                <SubTitle>Bids</SubTitle>
-                <div className="h-48 space-y-4 overflow-auto px-2 py-4">
-                  {auction?.bids.map((item) => (
-                    <Bid item={item} />
-                  ))}
+              {auction?.bids?.length ? (
+                <div className="">
+                  <SubTitle>Bids</SubTitle>
+                  <div className="h-48 space-y-4 overflow-auto px-2 py-4">
+                    {auction?.bids.map((item) => (
+                      <Bid item={item} />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                ''
+              )}
             </div>
 
             <Spacer />

@@ -13,7 +13,7 @@ import Nav from 'components/nav'
 
 const useCollection = (id: string) => {
   const { data, error } = useSWR<Collection, any>(
-    id && `https://api.x.immutable.com/v1/collections/${id}`,
+    id && `https://api.ropsten.x.immutable.com/v1/collections/${id}`,
     fetcher
   )
 
