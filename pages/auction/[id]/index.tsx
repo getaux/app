@@ -58,6 +58,9 @@ export default function Page() {
     auction?.asset?.tokenAddress as string
   )
 
+  const tokenAddress = auction?.asset?.tokenAddress
+  const tokenId = auction?.asset?.tokenId
+
   const owner = auction?.owner
   const isActive = auction?.status == AuctionStatus.Active
 
@@ -108,6 +111,18 @@ export default function Page() {
 
               {id && isOwner && isActive && (
                 <CancelAuctionButton id={id as string} />
+              )}
+
+              {id && isOwner && !isActive && tokenAddress && tokenId && (
+                <Button
+                  onClick={(e) =>
+                    router.push(`/create/${tokenAddress}/${tokenId}`)
+                  }
+                  type="success"
+                  bordered
+                >
+                  Create Auction
+                </Button>
               )}
             </div>
 

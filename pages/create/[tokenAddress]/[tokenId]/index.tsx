@@ -1,6 +1,15 @@
 import { ERC721TokenType } from '@imtbl/imx-sdk'
 import { useRouter } from 'next/router'
-import { Avatar, Button, Input, Spacer, Text, Image } from '@nextui-org/react'
+import {
+  Avatar,
+  Button,
+  Input,
+  Spacer,
+  Text,
+  Image,
+  Divider,
+  Loading,
+} from '@nextui-org/react'
 import { useState, useCallback, useEffect } from 'react'
 import { Dropdown } from '@nextui-org/react'
 import useSWR from 'swr'
@@ -9,15 +18,20 @@ import { toBn } from 'evm-bn'
 const sleep = (time: number) => new Promise((r) => setTimeout(r, time))
 import { link } from 'utils/useImx'
 import toast from 'utils/toast'
+import EndAt from 'components/end-at'
+import Nav from 'components/nav'
 
 export default function Page() {
   return (
-    <div className="mx-auto max-w-5xl">
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-        <CreateAuctionContent />
-        <PreviewAuction />
+    <>
+      <Nav />
+      <div className="mx-auto max-w-4xl">
+        <div className="grid grid-cols-1 gap-10 px-6 py-12 lg:grid-cols-2">
+          <CreateAuctionContent />
+          <PreviewAuction />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -36,8 +50,8 @@ const PreviewAuction = () => {
       <Image
         showSkeleton
         maxDelay={10000}
-        width={500}
-        height={500}
+        // width={500}
+        // height={500}
         className="rounded-lg"
         src={data?.image_url}
       />
@@ -298,7 +312,7 @@ const transferAndCreateAuction = async (req: CreateAuctionRequest) => {
 
     console.log(transferId)
 
-    await sleep(5000)
+    await sleep(3000)
 
     let { data, error } = await createAuction({
       transferId,
@@ -325,6 +339,7 @@ const transferAndCreateAuction = async (req: CreateAuctionRequest) => {
 }
 
 const CreateAuctionContent = () => {
+  const [loading, setLoading] = useState(false)
   const [endAt, setEndAt] = useState()
   const [pricing, setPricing] = useState()
   const [auctionType, setAuctionType] = useState('english')
@@ -333,6 +348,8 @@ const CreateAuctionContent = () => {
 
   const handleClick = useCallback(async () => {
     try {
+      setLoading(true)
+
       const { quantity, decimals, currencyType } = pricing
 
       if (!endAt) {
@@ -373,29 +390,56 @@ const CreateAuctionContent = () => {
         throw Error((error as any).message)
       }
 
-      toast.success('Auction created!')
+      toast.success('Auction created. Rediecting...')
+
+      setTimeout(() => {
+        router.push(`/auction/${response?.id}`)
+      }, 3000)
     } catch (e) {
       console.error(e)
       toast.error((e as any).message)
     } finally {
+      setLoading(false)
     }
   }, [endAt, pricing, tokenId, tokenAddress, auctionType])
 
   return (
     <div>
-      <QuantityInput onChange={setPricing} />
+      <div>
+        <Text h2>Pricing</Text>
+        <Text small css={{ color: '#999' }}>
+          To sell a creature (or bundle of creatures) to the highest bidder,
+          select highest bid!
+        </Text>
+        <Spacer />
+        <QuantityInput onChange={setPricing} />
+      </div>
 
       <Spacer />
       <Spacer />
-
+      <div className="w-full border-b-[1px] border-slate-100"></div>
+      <Spacer />
       <Spacer />
 
-      <DateAndTime onChange={setEndAt} />
+      <div>
+        <Text h2>Ending time</Text>
+        <Text small css={{ color: '#999' }}>
+          To sell a creature (or bundle of creatures) to the highest bidder,
+          select highest bid!
+        </Text>
+        <Spacer />
+        <EndAt onChange={setEndAt} />
+      </div>
 
+      <Spacer />
+      <Spacer />
+      <div className="w-full border-b-[1px] border-slate-100"></div>
+      <Spacer />
       <Spacer />
 
       <AuctionTypeDropdown onChange={setAuctionType} />
 
+      <Spacer />
       <Spacer />
       <Spacer />
 
@@ -406,7 +450,11 @@ const CreateAuctionContent = () => {
         auto
         onClick={handleClick}
       >
-        Create Auction'
+        {loading ? (
+          <Loading type="spinner" color="currentColor" size="sm" />
+        ) : (
+          'Create Auction'
+        )}
       </Button>
     </div>
   )
