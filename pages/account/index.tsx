@@ -59,8 +59,8 @@ const Product = ({ item }: { item: Asset }) => {
         <span className="elipsis text-xs text-gray-400">{name}</span>
 
         <Image
-          height={'250px'}
-          width={'250px'}
+          // height={'250px'}
+          // width={'250px'}
           showSkeleton
           className="w-full rounded-lg"
           src={image_url}
