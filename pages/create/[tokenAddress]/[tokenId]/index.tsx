@@ -56,12 +56,7 @@ const PreviewAuction = () => {
         src={data?.image_url}
       />
 
-      <Text
-        b
-        size={'xl'}
-        size={60}
-        css={{ fontWeight: '800', color: '$accents5' }}
-      >
+      <Text b size={'xl'} css={{ fontWeight: '800', color: '$accents5' }}>
         {data?.name}
       </Text>
     </div>
@@ -246,7 +241,6 @@ const AuctionTypeDropdown = ({ onChange }: { onChange: any }) => {
           <Button
             light
             bordered
-            color={''}
             animated={false}
             css={{ border: '2px solid #eee' }}
           >
@@ -255,7 +249,7 @@ const AuctionTypeDropdown = ({ onChange }: { onChange: any }) => {
         </Dropdown.Trigger>
         <Dropdown.Menu
           onAction={(e) => {
-            setType(e)
+            setType(e as AuctionType)
             onChange && onChange(e)
           }}
           aria-label="Auction Type"
@@ -268,7 +262,7 @@ const AuctionTypeDropdown = ({ onChange }: { onChange: any }) => {
   )
 }
 
-const createAuction = async (payload: AuctionPayload) => {
+const createAuction = async (payload: any) => {
   const options = {
     method: 'POST',
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
@@ -341,7 +335,7 @@ const transferAndCreateAuction = async (req: CreateAuctionRequest) => {
 const CreateAuctionContent = () => {
   const [loading, setLoading] = useState(false)
   const [endAt, setEndAt] = useState()
-  const [pricing, setPricing] = useState()
+  const [pricing, setPricing] = useState<any>()
   const [auctionType, setAuctionType] = useState('english')
   const router = useRouter()
   const { tokenId, tokenAddress } = router.query

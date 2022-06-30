@@ -69,6 +69,7 @@ const Product = ({ item }: { item: Asset }) => {
 
       <Link href={`/create/${token_address}/${token_id}`}>
         <a className="absolute bottom-2 right-2 cursor-pointer rounded-md p-0.5 text-gray-50  transition-all duration-300 hover:border-white dark:bg-black sm:opacity-0 sm:group-hover:opacity-100">
+          {/*// @ts-expect-error */}
           <Button type="success" size={'sm'}>
             Auction
           </Button>

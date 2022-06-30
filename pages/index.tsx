@@ -58,6 +58,7 @@ const Home: NextPage = () => {
           <Spacer />
 
           <div className="justify-centerr flex flex-col items-center">
+            {/* @ts-expect-error */}
             <Button type={'success'}>Random auction</Button>
             <Spacer />
             <Spacer />

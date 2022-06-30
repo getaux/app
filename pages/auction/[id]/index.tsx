@@ -134,6 +134,7 @@ export default function Page() {
                   onClick={(e) =>
                     router.push(`/create/${tokenAddress}/${tokenId}`)
                   }
+                  // @ts-expect-error
                   type="success"
                   bordered
                 >

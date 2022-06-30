@@ -12,6 +12,7 @@ import {
 } from 'components/dropdown'
 
 const Nav = () => {
+  // @ts-expect-error
   const { user, disconnect, connect } = useImx()
   return (
     <div className="z-100 border-2 border-b border-gray-50">
@@ -45,6 +46,7 @@ const Nav = () => {
                 bordered
                 size={'sm'}
                 onClick={(e) => connect()}
+                // @ts-expect-error
                 type={'success'}
               >
                 Conect

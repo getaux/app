@@ -91,6 +91,7 @@ export default function Page() {
   const handleCreate = async () => {
     let { data, error } = await createAuction({
       transferId: '4747561',
+      // @ts-expect-error
       quantity: toBn('0.01'),
       decimals: 18,
       endAt: '2022-06-29T14:03:11.026Z',
@@ -114,6 +115,7 @@ export default function Page() {
       },
     ])
     console.log(res)
+    // @ts-expect-error
     let { txId: transferId } = res?.result[0]
 
     console.log(transferId)
