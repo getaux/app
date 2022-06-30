@@ -1,8 +1,15 @@
 import { useRouter } from 'next/router'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { format } from 'date-fns'
 import Link from 'next/link'
 import { Button, Loading, Image } from '@nextui-org/react'
+import { useImx, link } from 'utils/useImx'
+import { ERC721TokenType, ETHTokenType, ERC20TokenType } from '@imtbl/imx-sdk'
+import React from 'react'
+import { Modal, Input, Row, Checkbox, Text } from '@nextui-org/react'
+import PricingInput from 'components/pricing-input'
+import CurrencyType from 'types/currencyType'
+import toast from 'utils/toast'
 
 import { forHumans } from 'utils'
 import fetcher from 'utils/fetcher'
@@ -13,9 +20,11 @@ import Nav from 'components/nav'
 import Spacer from 'components/spacer'
 import getPriceIcon from 'utils/getPriceIcon'
 import CancelAuctionButton from 'components/cancel-auction-button'
-import { Verified } from 'components/icons'
+import { Logo, Verified } from 'components/icons'
 import { useAccount } from 'wagmi'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import createBid from 'utils/createBid'
+import { DollarSign } from '@geist-ui/icons'
 
 const useCollection = (id: string) => {
   const { data, error } = useSWR<Collection, any>(
@@ -41,11 +50,11 @@ const useAuction = () => {
   const router = useRouter()
   const { id } = router.query
 
-  const { data, error } = useSWR<AuctionItem, any>(
+  const { data, error, mutate } = useSWR<AuctionItem, any>(
     id && `https://getaux-staging.imxrarity.io/v1/auctions/${id}`,
     fetcher
   )
-  return { data, error, isLoading: !data && !error }
+  return { data, error, isLoading: !data && !error, mutate }
 }
 
 export default function Page() {
@@ -63,6 +72,8 @@ export default function Page() {
 
   const owner = auction?.owner
   const isActive = auction?.status == AuctionStatus.Active
+
+  console.log(isActive, isOwner, owner, address)
 
   useEffect(() => {
     if (
@@ -103,16 +114,7 @@ export default function Page() {
             maxDelay={10000}
             css={{ borderRadius: '8px' }}
             src={`http://www.deelay.me/250/${auction?.asset?.imageUrl}`}
-            //src="http://www.deelay.me/10000/https://github.com/nextui-org/nextui/blob/next/apps/docs/public/nextui-banner.jpeg?raw=true"
-            //alt="Default Image"
           />
-          {/* <Image
-            // width={'400px'}
-            // height={'400px'}
-            showSkeleton
-            className="w-full rounded-lg"
-            src={auction?.asset?.imageUrl}
-          /> */}
 
           <div className="mt-12 flex flex-col items-center lg:mt-0 lg:items-start">
             <div className="flex w-full items-center justify-between">
@@ -187,11 +189,15 @@ export default function Page() {
                 )}
               </div>
 
-              {auction?.bids?.length ? (
+              {auction?.bids?.sort(
+                (a, b) =>
+                  new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime()
+              )?.length ? (
                 <div className="">
                   <SubTitle>Bids</SubTitle>
-                  <div className="h-48 space-y-4 overflow-auto px-2 py-4">
-                    {auction?.bids.map((item) => (
+                  <div className="max-h-48 space-y-4 overflow-auto px-2 py-4">
+                    {auction?.bids?.reverse()?.map((item) => (
                       <Bid item={item} />
                     ))}
                   </div>
@@ -203,11 +209,156 @@ export default function Page() {
 
             <Spacer />
 
-            <Button color="success">Buy</Button>
+            <BidModal />
           </div>
         </div>
       </Layout>
     </>
+  )
+}
+
+type Pricing = {
+  currencyType: CurrencyType
+  decimals: number
+  amount: string
+}
+
+type TransferAndBidRequest = {
+  currencyType: string
+  //currencyType: ERC721TokenType | ETHTokenType | ERC20TokenType
+  amount: string
+  auctionId: number
+}
+
+const transferAndBid = async ({
+  currencyType,
+  amount,
+  auctionId,
+}: TransferAndBidRequest) => {
+  try {
+    const res = await link.transfer([
+      {
+        // @ts-expect-error
+        type: currencyType,
+        amount,
+        toAddress: process.env.NEXT_PUBLIC_AUCTIONX_ADDRESS as string,
+      },
+    ])
+
+    console.log('Response from link transfer', res)
+
+    // @ts-expect-error
+    let { txId: transferId, status } = res?.result[0]
+
+    if (status !== 'success') {
+      throw new Error('Transfer failed')
+    }
+
+    let { data, error } = await createBid({
+      transferId,
+      auctionId,
+    })
+
+    console.log(data, error)
+
+    if (error) {
+      let { message } = error
+      throw Error(message)
+    }
+
+    return { data }
+  } catch (e) {
+    console.error('Failed to create bid', e)
+    return { error: { message: (e as any).message } }
+  } finally {
+  }
+}
+
+const BidModal = () => {
+  const [pricing, setPricing] = useState<Pricing>()
+  const [visible, setVisible] = React.useState(false)
+  const [loading, setLoading] = useState(false)
+  const { mutate } = useAuction()
+  const router = useRouter()
+  const auctionId = router.query.id as string
+
+  const handler = () => setVisible(true)
+  const handleClose = () => setVisible(false)
+
+  const handleBid = useCallback(async () => {
+    try {
+      setLoading(true)
+      const { amount, currencyType } = pricing as Pricing
+
+      if (!amount) {
+        throw Error('No amount given')
+      }
+
+      if (!currencyType) {
+        throw Error('No currency type given')
+      }
+
+      const { data, error } = await transferAndBid({
+        auctionId: Number(auctionId),
+        currencyType,
+        amount,
+      })
+      console.log(data, error)
+      if (error) {
+        throw Error(error.message)
+      }
+      toast.success('Bid created!')
+      mutate()
+    } catch (e) {
+      console.error(e)
+      toast.error((e as any).message)
+    } finally {
+      setLoading(false)
+      setVisible(false)
+    }
+  }, [pricing, auctionId])
+
+  return (
+    <div>
+      {/* @ts-expect-error */}
+      <Button css={{ width: '100%' }} type="success" onPress={handler}>
+        Bid
+      </Button>
+      <Modal
+        animated={false}
+        closeButton
+        blur
+        aria-labelledby="modal-title"
+        open={visible}
+        onClose={handleClose}
+      >
+        <Modal.Header>
+          <Logo size={'62'} />
+        </Modal.Header>
+        <Modal.Body>
+          <Text h2>Place your bid</Text>
+          <Text small css={{ color: '#999' }}>
+            Choose from a list of currencies to place your bid, with the amount
+            you want.
+          </Text>
+          <Spacer />
+          <PricingInput onChange={setPricing} />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto flat css={{ color: '$accents5' }} onClick={handleClose}>
+            Close
+          </Button>
+          {/* @ts-expect-error */}
+          <Button auto type="success" onClick={handleBid}>
+            {loading ? (
+              <Loading type="spinner" color="currentColor" size="sm" />
+            ) : (
+              'Bid'
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
   )
 }
 
@@ -218,7 +369,7 @@ const Bid = ({ item }: { item: AuctionBid }) => {
 
   return (
     <div className="flex items-center space-x-4 border-t-[1px] border-gray-50 pt-4">
-      <div className="h-8 w-8 rounded-full bg-red-500"></div>
+      <div className="h-7 w-7 rounded-full bg-green-200"></div>
       <div>
         <Title>
           Bid of {price} {auction?.tokenType} placed by {prettyHex(item?.owner)}

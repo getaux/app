@@ -10,9 +10,15 @@ import Layout from 'components/layout'
 import Spacer from 'components/spacer'
 import Product from 'components/product'
 import Nav from 'components/nav'
+import { useRouter } from 'next/router'
 
 const Home: NextPage = () => {
   const { data } = useAuction()
+  const router = useRouter()
+
+  const randomAuctionId = data?.result?.map((x) => x.id)[
+    Math.floor(Math.random() * data?.result?.length)
+  ]
 
   return (
     <div className="animate-fade">
@@ -24,7 +30,7 @@ const Home: NextPage = () => {
       <Nav />
 
       <Layout>
-        <div
+        {/* <div
           style={{
             zIndex: 0,
             left: '50%',
@@ -34,7 +40,7 @@ const Home: NextPage = () => {
           className="absolute"
         >
           <Gradient />
-        </div>
+        </div> */}
         <div className="z-50 flex flex-col py-36">
           <div className="flex flex-col items-center justify-center text-center">
             <Logo size={'120px'} />
@@ -58,8 +64,13 @@ const Home: NextPage = () => {
           <Spacer />
 
           <div className="justify-centerr flex flex-col items-center">
-            {/* @ts-expect-error */}
-            <Button type={'success'}>Random auction</Button>
+            <Button
+              onClick={(e) => router.push(`/auction/${randomAuctionId}`)}
+              // @ts-expect-error
+              type={'success'}
+            >
+              Random auction
+            </Button>
             <Spacer />
             <Spacer />
           </div>

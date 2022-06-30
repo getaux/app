@@ -19,9 +19,9 @@ export default function Page() {
   const { user } = useImx()
   const { data } = useSWR(
     user &&
-      `https://api.ropsten.x.immutable.com/v1/assets?user=${user}&direction=asc&order_by=name`,
+      //  `https://api.ropsten.x.immutable.com/v1/assets?user=${user}&direction=asc&order_by=name`,
 
-    //`https://api.ropsten.x.immutable.com/v1/assets?user=${user}&direction=asc&order_by=name&collection=0x9f6ceedacc84e8266c3e7ce6f7bcbf7d1de39501`,
+      `https://api.ropsten.x.immutable.com/v1/assets?user=${user}&direction=asc&order_by=name&collection=0x9f6ceedacc84e8266c3e7ce6f7bcbf7d1de39501`,
     fetcher
   )
   return (

@@ -139,29 +139,34 @@ export default function Page() {
       const res = await link.transfer([
         {
           type: ETHTokenType.ETH,
-          amount: '0.015',
-          toAddress: '0x0dcc8801077bb9c8d874f84d07924ef91d6f3574',
+          amount: '0.02',
+          toAddress: process.env.NEXT_PUBLIC_AUCTIONX_ADDRESS as string,
         },
       ])
 
       console.log('Response from link transfer', res)
 
       // @ts-expect-error
-      let { txId: transferId } = res?.result[0]
+      let { txId: transferId, status } = res?.result[0]
 
-      await sleep(5000)
-
-      let { data, error } = await createBid({
-        transferId,
-        auctionId: 49,
-      })
-
-      console.log(data, error)
-
-      if (error) {
-        let { error: message, code } = error
-        return toast.error(message)
+      if (status !== 'success') {
+        throw new Error('Transfer failed')
       }
+
+      // // TODO: retry if txId is not available
+      // await sleep(5000)
+
+      // let { data, error } = await createBid({
+      //   transferId,
+      //   auctionId: 62,
+      // })
+
+      // console.log(data, error)
+
+      // if (error) {
+      //   let { error: message, code } = error
+      //   return toast.error(message)
+      // }
       toast.success('Created bid!')
     } catch (e) {
       console.error('Failed to create bid', e)
@@ -200,6 +205,12 @@ export default function Page() {
       <Spacer />
 
       <CancelAuctionButton id={'45'} />
+
+      <Spacer />
+      {/* @ts-expect-error */}
+      <Button onClick={handleBid} type="success">
+        Bid on item
+      </Button>
     </div>
   )
 }

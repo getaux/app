@@ -38,7 +38,24 @@ const Product = ({ item }: { item: AuctionItem }) => {
     asset: { imageUrl, name },
   } = item
 
-  let price = Number(quantity) / parseFloat(`1e${Number(decimals)}`)
+  //let price = Number(quantity) / parseFloat(`1e${Number(decimals)}`)
+
+  let highestBid
+  let highestBidString
+  let ending
+
+  if (item?.bids?.length) {
+    highestBid = item?.bids?.reduce(function (prev, current) {
+      return Number(prev?.quantity) > Number(current?.quantity) ? prev : current
+    })
+
+    highestBidString =
+      Number(highestBid?.quantity) / parseFloat(`1e${item?.decimals}`)
+  }
+
+  ending = forHumans(
+    item && (new Date(item?.endAt).getTime() - new Date().getTime()) / 1000
+  )
 
   return (
     <Link href={`/auction/${id}`}>
@@ -57,11 +74,7 @@ const Product = ({ item }: { item: AuctionItem }) => {
 
           <div className=" flex items-center" style={{ marginLeft: '-3px' }}>
             <Watch />
-            <span className="elipsis ml-1 text-xs text-gray-400">
-              {forHumans(
-                (new Date(endAt).getTime() - new Date().getTime()) / 1000
-              )}
-            </span>
+            <span className="elipsis ml-1 text-xs text-gray-400">{ending}</span>
           </div>
 
           <div
@@ -70,7 +83,10 @@ const Product = ({ item }: { item: AuctionItem }) => {
           >
             {getPriceIcon(tokenType)}
             <span className="elipsis ml-1 text-lg font-bold text-gray-900">
-              {price}
+              {highestBidString ? highestBidString : '-'}
+            </span>
+            <span className="ml-2 text-xs text-gray-400">
+              {highestBidString ? 'highest bid' : 'no bids yet'}
             </span>
           </div>
         </div>

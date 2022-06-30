@@ -56,9 +56,9 @@ const PreviewAuction = () => {
         src={data?.image_url}
       />
 
-      <Text b size={'xl'} css={{ fontWeight: '800', color: '$accents5' }}>
+      <span className="mt-2 text-8xl font-extrabold text-gray-200">
         {data?.name}
-      </Text>
+      </span>
     </div>
   )
 }
@@ -262,22 +262,24 @@ const AuctionTypeDropdown = ({ onChange }: { onChange: any }) => {
   )
 }
 
-const createAuction = async (payload: any) => {
-  const options = {
-    method: 'POST',
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  }
+import createAuction from 'utils/createAuction'
 
-  let url = 'https://getaux-staging.imxrarity.io/v1/auctions'
-  let res = await fetch(url, options)
-  let json = await res.json()
-  if (res.status !== 200) {
-    return { error: json }
-  }
+// const createAuction = async (payload: any) => {
+//   const options = {
+//     method: 'POST',
+//     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+//     body: JSON.stringify(payload),
+//   }
 
-  return { data: json }
-}
+//   let url = 'https://getaux-staging.imxrarity.io/v1/auctions'
+//   let res = await fetch(url, options)
+//   let json = await res.json()
+//   if (res.status !== 200) {
+//     return { error: json }
+//   }
+
+//   return { data: json }
+// }
 
 const transferAndCreateAuction = async (req: CreateAuctionRequest) => {
   try {
@@ -306,11 +308,9 @@ const transferAndCreateAuction = async (req: CreateAuctionRequest) => {
 
     console.log(transferId)
 
-    await sleep(3000)
-
     let { data, error } = await createAuction({
       transferId,
-      quantity,
+      quantity: Number(quantity),
       decimals,
       endAt,
       tokenType: currencyType,
@@ -320,7 +320,7 @@ const transferAndCreateAuction = async (req: CreateAuctionRequest) => {
     console.log(data, error)
 
     if (error) {
-      let { error: message, code } = error
+      let { message } = error
       throw Error(message)
     }
 
@@ -334,7 +334,9 @@ const transferAndCreateAuction = async (req: CreateAuctionRequest) => {
 
 const CreateAuctionContent = () => {
   const [loading, setLoading] = useState(false)
-  const [endAt, setEndAt] = useState()
+  const [endAt, setEndAt] = useState(
+    new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
+  )
   const [pricing, setPricing] = useState<any>()
   const [auctionType, setAuctionType] = useState('english')
   const router = useRouter()
