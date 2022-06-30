@@ -47,7 +47,7 @@ const Home: NextPage = () => {
             <div className="my-2 flex items-center">
               <span
                 className="ml-2 text-6xl font-extrabold"
-                style={{ fontFamily: 'GT Walsheim' }}
+                //style={{ fontFamily: 'GT Walsheim' }}
               >
                 Auctions for Immutable X are here.
               </span>
@@ -77,7 +77,7 @@ const Home: NextPage = () => {
         </div>
 
         <span className="px-4 text-xl font-bold">Auctions</span>
-        <div className="z-50 grid grid-cols-2 gap-6 p-4 md:grid-cols-3 lg:grid-cols-3">
+        <div className="z-50 grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
           {data?.result?.slice(0, 12)?.map((item: AuctionItem) => {
             return <Product item={item} />
           })}
