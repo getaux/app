@@ -2,31 +2,10 @@ import { AuctionItem } from 'types/auction'
 import Link from 'next/link'
 import { Image } from '@nextui-org/react'
 
-import { Watch, Expired, InProgress, Cancelled, Done } from 'components/icons'
+import { Watch } from 'components/icons'
 import { forHumans } from 'utils'
 import getPriceIcon from 'utils/getPriceIcon'
-
-export const getStatusIcon = (type: string) => {
-  let icon
-  switch (type) {
-    case 'expired':
-      icon = (() => <Expired />)()
-      break
-    case 'active':
-      icon = <InProgress />
-      break
-    case 'cancelled':
-      icon = <Cancelled />
-      break
-    case 'filled':
-      icon = <Done />
-      break
-    default:
-      break
-  }
-
-  return icon
-}
+import getStatusIcon from 'utils/getStatusIcon'
 
 const Product = ({ item }: { item: AuctionItem }) => {
   const {

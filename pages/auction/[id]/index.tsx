@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router'
-import useSWR, { mutate } from 'swr'
+import useSWR from 'swr'
 import { format } from 'date-fns'
 import Link from 'next/link'
 import { Button, Loading, Image } from '@nextui-org/react'
-import { useImx, link } from 'utils/useImx'
-import { ERC721TokenType, ETHTokenType, ERC20TokenType } from '@imtbl/imx-sdk'
+import { link } from 'utils/useImx'
 import React from 'react'
-import { Modal, Input, Row, Checkbox, Text } from '@nextui-org/react'
-import PricingInput from 'components/pricing-input'
-import CurrencyType from 'types/currencyType'
-import toast from 'utils/toast'
+import { Modal, Text } from '@nextui-org/react'
+import User from '@geist-ui/icons/user'
+import { DollarSign } from '@geist-ui/icons'
+import { useAccount } from 'wagmi'
+import { useCallback, useEffect, useState } from 'react'
 
 import { forHumans } from 'utils'
 import fetcher from 'utils/fetcher'
@@ -21,10 +21,12 @@ import Spacer from 'components/spacer'
 import getPriceIcon from 'utils/getPriceIcon'
 import CancelAuctionButton from 'components/cancel-auction-button'
 import { Logo, Verified } from 'components/icons'
-import { useAccount } from 'wagmi'
-import { useCallback, useEffect, useState } from 'react'
 import createBid from 'utils/createBid'
-import { DollarSign } from '@geist-ui/icons'
+import getStatusIcon from 'utils/getStatusIcon'
+import { Watch } from 'components/icons'
+import PricingInput from 'components/pricing-input'
+import CurrencyType from 'types/currencyType'
+import toast from 'utils/toast'
 
 const useCollection = (id: string) => {
   const { data, error } = useSWR<Collection, any>(
@@ -46,6 +48,26 @@ const Title = ({ children }: { children: any }) => (
   <div className="text-md font-bold text-gray-700">{children}</div>
 )
 
+const Property = ({
+  icon,
+  title,
+  description,
+}: {
+  icon: any
+  title: string
+  description: any
+}) => {
+  return (
+    <div className="flex">
+      <span className="mb-1 w-8">{icon}</span>
+      <div className="-mt-0.5 flex flex-col">
+        <span className="mb-1 text-xs uppercase text-gray-400">{title}</span>
+        <span className="text-md text-gray-600">{description}</span>
+      </div>
+    </div>
+  )
+}
+
 const useAuction = () => {
   const router = useRouter()
   const { id } = router.query
@@ -55,6 +77,61 @@ const useAuction = () => {
     fetcher
   )
   return { data, error, isLoading: !data && !error, mutate }
+}
+
+import { isValid, intervalToDuration } from 'date-fns'
+
+const useCountdown = (initialDate: Date) => {
+  const [remaining, setRemaining] = useState<any>()
+
+  useEffect(() => {
+    const pastDate = new Date(initialDate).getTime() < new Date().getTime()
+
+    if (
+      isValid(initialDate) &&
+      !pastDate &&
+      new Date(initialDate).getTime() - new Date().getTime() > 0
+    ) {
+      let id = setInterval(() => {
+        let duration = intervalToDuration({
+          start: new Date(),
+          end: new Date(initialDate),
+        })
+
+        setRemaining(duration)
+      }, 1000)
+
+      return () => clearInterval(id)
+    } else {
+      setRemaining(null)
+    }
+  }, [initialDate])
+
+  return { remaining }
+}
+
+const CountdownProperty = () => {
+  const { auction } = useAuction()
+  const { remaining } = useCountdown(new Date(auction?.endAt))
+
+  return (
+    <Property
+      icon={<Watch />}
+      title="Remaining"
+      description={
+        <>
+          {remaining && (
+            <div className="flex space-x-1">
+              <span>{remaining?.days}d</span>
+              <span>{remaining?.hours}h</span>
+              <span>{remaining?.minutes}m</span>
+            </div>
+          )}
+          {/* {!remaining && <span className="text-xs text-red-300">expired</span>}{' '} */}
+        </>
+      }
+    />
+  )
 }
 
 export default function Page() {
@@ -100,6 +177,8 @@ export default function Page() {
         (new Date(auction?.endAt).getTime() - new Date().getTime()) / 1000
     )
   }
+
+  const hasEnded = new Date(auction?.endAt).getTime() < new Date().getTime()
 
   return (
     <>
@@ -169,25 +248,36 @@ export default function Page() {
             )}
 
             <Spacer />
+            <Spacer />
+            <div className="w-full border-b-[1px] border-slate-100"></div>
+            <Spacer />
+            <Spacer />
 
             <div className="flex flex-col space-y-10">
-              <div className="flex gap-8">
-                <div className="flex flex-col">
-                  <SubTitle>Owner</SubTitle>
-                  <span className="text-md font-bold text-gray-700">
-                    {prettyHex(auction?.owner as string)}
-                  </span>
-                </div>
+              <div className="flex flex-col gap-5">
+                <Property
+                  icon={getStatusIcon(auction?.status)}
+                  title={'Status'}
+                  description={auction?.status}
+                />
+                <Property
+                  icon={<User size={'18'} color={'#999'} />}
+                  title={'Owner'}
+                  description={prettyHex(auction?.owner as string)}
+                />
+
+                {!hasEnded && <CountdownProperty />}
 
                 {highestBid && (
-                  <div className="flex flex-col">
-                    <SubTitle>Highest bid</SubTitle>
-                    <span className="text-md font-bold text-gray-700">
-                      {price} {auction?.tokenType}
-                    </span>
-                  </div>
+                  <Property
+                    icon={getPriceIcon(auction?.tokenType as string, '18')}
+                    title={'Highest bid'}
+                    description={`${price} ${auction?.tokenType}`}
+                  />
                 )}
               </div>
+
+              <div className="w-full border-b-[1px] border-slate-100"></div>
 
               {auction?.bids?.sort(
                 (a, b) =>
@@ -207,6 +297,9 @@ export default function Page() {
               )}
             </div>
 
+            <Spacer />
+            <Spacer />
+            <Spacer />
             <Spacer />
 
             <BidModal />
