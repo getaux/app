@@ -49,7 +49,7 @@ const Nav = () => {
                 // @ts-expect-error
                 type={'success'}
               >
-                Conect
+                Connect
               </Button>
             </div>
           )}
