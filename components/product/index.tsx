@@ -83,8 +83,8 @@ const Product = ({ item }: { item: AuctionItem }) => {
 
         <Image
           showSkeleton
-          // width={200}
-          // height={200}
+          width={220}
+          height={220}
           maxDelay={10000}
           css={{ borderRadius: '8px' }}
           src={`http://www.deelay.me/250/${imageUrl}`}
