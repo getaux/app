@@ -171,6 +171,7 @@ export default function Page() {
 
           <div className="mt-12 flex flex-col items-center lg:mt-0 lg:items-start">
             <div className="flex w-full items-center justify-between">
+              <div className="mx-auto lg:m-0">
               <Link href={`/collection/${collection?.address}`}>
                 <a>
                   <div className="flex items-center space-x-1">
@@ -179,6 +180,7 @@ export default function Page() {
                   </div>
                 </a>
               </Link>
+              </div>
 
               {id && isOwner && isActive && (
                 <CancelAuctionButton id={id as string} />
@@ -256,7 +258,7 @@ export default function Page() {
                 )}
               </div>
 
-              <div className="w-full border-b-[1px] border-slate-100"></div>
+             
 
               {auction?.bids?.sort(
                 (a, b) =>
@@ -275,6 +277,12 @@ export default function Page() {
                 ''
               )}
             </div>
+
+            <Spacer />
+            <Spacer />
+
+
+            <div className="w-full border-b-[1px] border-slate-100"></div>
 
             <Spacer />
             <Spacer />
