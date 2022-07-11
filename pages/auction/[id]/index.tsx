@@ -141,7 +141,9 @@ export default function Page() {
       return Number(prev?.quantity) > Number(current?.quantity) ? prev : current
     })
 
-    price = Number(highestBid?.quantity || auction?.quantity) / parseFloat(`1e${auction?.decimals}`)
+    price =
+      Number(highestBid?.quantity || auction?.quantity) /
+      parseFloat(`1e${auction?.decimals}`)
 
     let ending = forHumans(
       auction &&
@@ -171,16 +173,18 @@ export default function Page() {
 
           <div className="mt-12 flex flex-col items-center lg:mt-0 lg:items-start">
             <div className="flex w-full items-center justify-between">
-              <div className="mx-auto lg:m-0">
-              <Link href={`/collection/${collection?.address}`}>
-                <a>
-                  <div className="flex items-center space-x-1">
-                    <Verified />
-                    <SubTitle>{collection?.name}</SubTitle>
-                  </div>
-                </a>
-              </Link>
-              </div>
+              {collection?.name && (
+                <div className="mx-auto lg:m-0">
+                  <Link href={`/collection/${collection?.address}`}>
+                    <a>
+                      <div className="flex items-center space-x-1">
+                        <Verified />
+                        <SubTitle>{collection?.name}</SubTitle>
+                      </div>
+                    </a>
+                  </Link>
+                </div>
+              )}
 
               {id && isOwner && isActive && (
                 <CancelAuctionButton id={id as string} />
@@ -214,17 +218,17 @@ export default function Page() {
               </SubTitle>
             )}
 
-
-
             <Spacer />
 
             {price && (
               <span className="flex items-end space-x-2">
                 <div className="-ml-2">
-                {getPriceIcon(auction?.tokenType as string, '38')}
+                  {getPriceIcon(auction?.tokenType as string, '38')}
                 </div>
                 <span className="text-5xl font-bold">{price}</span>
-                <span className="text-md font-sm text-gray-400">{auction?.bids?.length ? 'highest bid': 'minimum bid'}</span>
+                <span className="text-md font-sm text-gray-400">
+                  {auction?.bids?.length ? 'highest bid' : 'minimum bid'}
+                </span>
               </span>
             )}
 
@@ -258,8 +262,6 @@ export default function Page() {
                 )}
               </div>
 
-             
-
               {auction?.bids?.sort(
                 (a, b) =>
                   new Date(a.createdAt).getTime() -
@@ -280,7 +282,6 @@ export default function Page() {
 
             <Spacer />
             <Spacer />
-
 
             <div className="w-full border-b-[1px] border-slate-100"></div>
 
