@@ -141,12 +141,14 @@ export default function Page() {
       return Number(prev?.quantity) > Number(current?.quantity) ? prev : current
     })
 
-    price = Number(highestBid?.quantity) / parseFloat(`1e${auction?.decimals}`)
+    price = Number(highestBid?.quantity || auction?.quantity) / parseFloat(`1e${auction?.decimals}`)
 
     let ending = forHumans(
       auction &&
         (new Date(auction?.endAt).getTime() - new Date().getTime()) / 1000
     )
+  } else {
+    price = Number(auction?.quantity) / parseFloat(`1e${auction?.decimals}`)
   }
 
   const hasEnded =
@@ -210,12 +212,17 @@ export default function Page() {
               </SubTitle>
             )}
 
+
+
             <Spacer />
 
             {price && (
-              <span className="flex items-center space-x-2">
+              <span className="flex items-end space-x-2">
+                <div className="-ml-2">
                 {getPriceIcon(auction?.tokenType as string, '38')}
+                </div>
                 <span className="text-5xl font-bold">{price}</span>
+                <span className="text-md font-sm text-gray-400">{auction?.bids?.length ? 'highest bid': 'minimum bid'}</span>
               </span>
             )}
 
