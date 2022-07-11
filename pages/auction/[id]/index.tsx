@@ -346,8 +346,16 @@ const BidModal = () => {
   const { mutate } = useAuction()
   const router = useRouter()
   const auctionId = router.query.id as string
+  const { data: auction } = useAuction()
+  const endAt = new Date(auction?.endAt as Date)
 
-  const handler = () => setVisible(true)
+  const handler = () => {
+    if (endAt < new Date()) {
+      toast.error('Auction has ended')
+      return
+    }
+    setVisible(true)
+  }
   const handleClose = () => setVisible(false)
 
   const handleBid = useCallback(async () => {
