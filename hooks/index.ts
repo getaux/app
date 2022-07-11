@@ -1,7 +1,18 @@
 import useSWR from 'swr'
 
 import { AuctionResponse } from '../types/auction'
-import fetcher from 'utils/fetcher'
+
+const fetcher = async (url: string) => {
+  const res = await fetch(url)
+
+  if (!res.ok) {
+    const json = await res.json()
+    const error = new Error(json?.error || 'Network error')
+    throw error
+  }
+
+  return res.json()
+}
 
 export const useAuction = (args?: any) => {
   let url = 'https://getaux-staging.imxrarity.io/v1/auctions'

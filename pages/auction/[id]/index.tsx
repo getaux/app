@@ -27,6 +27,7 @@ import { Watch } from 'components/icons'
 import PricingInput from 'components/pricing-input'
 import CurrencyType from 'types/currencyType'
 import toast from 'utils/toast'
+import useCountdown from 'hooks/useCountdown'
 
 const useCollection = (id: string) => {
   const { data, error } = useSWR<Collection, any>(
@@ -79,40 +80,9 @@ const useAuction = () => {
   return { data, error, isLoading: !data && !error, mutate }
 }
 
-import { isValid, intervalToDuration } from 'date-fns'
-
-const useCountdown = (initialDate: Date) => {
-  const [remaining, setRemaining] = useState<any>()
-
-  useEffect(() => {
-    const pastDate = new Date(initialDate).getTime() < new Date().getTime()
-
-    if (
-      isValid(initialDate) &&
-      !pastDate &&
-      new Date(initialDate).getTime() - new Date().getTime() > 0
-    ) {
-      let id = setInterval(() => {
-        let duration = intervalToDuration({
-          start: new Date(),
-          end: new Date(initialDate),
-        })
-
-        setRemaining(duration)
-      }, 1000)
-
-      return () => clearInterval(id)
-    } else {
-      setRemaining(null)
-    }
-  }, [initialDate])
-
-  return { remaining }
-}
-
 const CountdownProperty = () => {
-  const { auction } = useAuction()
-  const { remaining } = useCountdown(new Date(auction?.endAt))
+  const { data: auction } = useAuction()
+  const { remaining } = useCountdown(new Date(auction?.endAt as Date))
 
   return (
     <Property
@@ -125,6 +95,7 @@ const CountdownProperty = () => {
               <span>{remaining?.days}d</span>
               <span>{remaining?.hours}h</span>
               <span>{remaining?.minutes}m</span>
+              <span>{remaining?.seconds}s</span>
             </div>
           )}
           {/* {!remaining && <span className="text-xs text-red-300">expired</span>}{' '} */}
@@ -178,7 +149,8 @@ export default function Page() {
     )
   }
 
-  const hasEnded = new Date(auction?.endAt).getTime() < new Date().getTime()
+  const hasEnded =
+    new Date(auction?.endAt as Date).getTime() < new Date().getTime()
 
   return (
     <>
@@ -256,7 +228,7 @@ export default function Page() {
             <div className="flex flex-col space-y-10">
               <div className="flex flex-col gap-5">
                 <Property
-                  icon={getStatusIcon(auction?.status)}
+                  icon={getStatusIcon(auction?.status as AuctionStatus)}
                   title={'Status'}
                   description={auction?.status}
                 />

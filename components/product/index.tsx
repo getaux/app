@@ -6,19 +6,18 @@ import { Watch } from 'components/icons'
 import { forHumans } from 'utils'
 import getPriceIcon from 'utils/getPriceIcon'
 import getStatusIcon from 'utils/getStatusIcon'
+import useCountdown from 'hooks/useCountdown'
 
 const Product = ({ item }: { item: AuctionItem }) => {
   const {
     id,
     status,
     endAt,
-    quantity,
     tokenType,
-    decimals,
     asset: { imageUrl, name },
   } = item
 
-  //let price = Number(quantity) / parseFloat(`1e${Number(decimals)}`)
+  const { remaining } = useCountdown(new Date(endAt as Date))
 
   let highestBid
   let highestBidString
@@ -54,7 +53,18 @@ const Product = ({ item }: { item: AuctionItem }) => {
 
           <div className=" flex items-center" style={{ marginLeft: '-3px' }}>
             <Watch />
-            <span className="elipsis ml-1 text-xs text-gray-400">{ending}</span>
+            <span className="elipsis ml-1 text-xs text-gray-400">
+              {remaining ? (
+                <div className="flex space-x-1">
+                  <span>{remaining?.days}d</span>
+                  <span>{remaining?.hours}h</span>
+                  <span>{remaining?.minutes}m</span>
+                  <span>{remaining?.seconds}s</span>
+                </div>
+              ) : (
+                'eneded'
+              )}
+            </span>
           </div>
 
           <div

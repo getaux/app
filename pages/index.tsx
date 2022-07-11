@@ -11,14 +11,22 @@ import Spacer from 'components/spacer'
 import Product from 'components/product'
 import Nav from 'components/nav'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import toast from 'utils/toast'
 
 const Home: NextPage = () => {
-  const { data } = useAuction()
+  const { data, error } = useAuction()
   const router = useRouter()
 
   const randomAuctionId = data?.result?.map((x) => x.id)[
     Math.floor(Math.random() * data?.result?.length)
   ]
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message)
+    }
+  }, [error])
 
   return (
     <div className="animate-fade">
