@@ -59,11 +59,13 @@ const Product = ({ item }: { item: Asset }) => {
         <span className="elipsis text-xs text-gray-400">{name}</span>
 
         <Image
-          // height={'250px'}
-          // width={'250px'}
+          height={'220px'}
+          width={'220px'}
+          maxDelay={10000}
           showSkeleton
           className="w-full rounded-lg"
-          src={image_url}
+          css={{ borderRadius: '8px' }}
+          src={`http://www.deelay.me/250/${image_url}`}
         />
       </div>
 
