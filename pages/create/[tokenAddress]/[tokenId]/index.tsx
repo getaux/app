@@ -231,8 +231,9 @@ const AuctionTypeDropdown = ({ onChange }: { onChange: any }) => {
     <>
       <Text h2>Auction Type</Text>
       <Text small css={{ color: '#999' }}>
-        To sell a creature (or bundle of creatures) to the highest bidder,
-        select highest bid!
+      English auction. Sell to the highest bidder: the highest bid wins at the end
+      Ducth. Sell with a declining price: the price falls until someone purchases
+
       </Text>
       <Spacer />
       {/* <span className="mb-2 ml-1 text-sm">Auction type</span> */}
@@ -404,8 +405,7 @@ const CreateAuctionContent = () => {
       <div>
         <Text h2>Pricing</Text>
         <Text small css={{ color: '#999' }}>
-          To sell a creature (or bundle of creatures) to the highest bidder,
-          select highest bid!
+          The minimum amount you want to sell this asset.
         </Text>
         <Spacer />
         <QuantityInput onChange={setPricing} />
@@ -420,8 +420,7 @@ const CreateAuctionContent = () => {
       <div>
         <Text h2>Ending time</Text>
         <Text small css={{ color: '#999' }}>
-          To sell a creature (or bundle of creatures) to the highest bidder,
-          select highest bid!
+          The time this auction will end and no more bids will be accepted.
         </Text>
         <Spacer />
         <EndAt onChange={setEndAt} />
