@@ -62,7 +62,7 @@ const Product = ({ item }: { item: AuctionItem }) => {
                   <span>{remaining?.seconds}s</span>
                 </div>
               ) : (
-                'eneded'
+                'ended'
               )}
             </span>
           </div>
