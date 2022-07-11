@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from 'components/dropdown'
+import prettyHex from 'utils/prettyHex'
 
 const Nav = () => {
   // @ts-expect-error
@@ -32,7 +33,13 @@ const Nav = () => {
 
               <DropdownMenuContent align="end" sideOffset={5}>
                 <Link href={'/account'}>
-                  <DropdownMenuItem>My account</DropdownMenuItem>
+                  <DropdownMenuItem>My aseets: {prettyHex(user)}</DropdownMenuItem>
+                </Link>
+                <Link href={'/account'}>
+                  <DropdownMenuItem>My bids</DropdownMenuItem>
+                </Link>
+                <Link href={'/account'}>
+                  <DropdownMenuItem>My auctions</DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
                 <a onClick={(_) => disconnect()}>
