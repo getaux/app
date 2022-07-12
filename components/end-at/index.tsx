@@ -121,11 +121,11 @@ const TimePopover = ({ onChange }: { onChange: any }) => {
 
 const EndAt = ({ onChange }: { onChange: any }) => {
   const [time, setTime] = useState(times[0])
-  const [date, setDate] = useState()
+  const [date, setDate] = useState(new Date())
   const [until, setUntil] = useState<any>()
 
   useEffect(() => {
-    if (date && time) {
+    if (date || time) {
       console.log(date, time)
       onChange && onChange(new Date(`${date} ${time}`))
     }

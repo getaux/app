@@ -20,6 +20,7 @@ type ApiResponse = {
 const createBid = async (body: {
   transferId: string
   auctionId: number
+  endAt: string
 }): Promise<ApiResponse> => {
   return axios
     .post('https://getaux-staging.imxrarity.io/v1/bids', body)

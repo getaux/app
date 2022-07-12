@@ -10,6 +10,7 @@ import User from '@geist-ui/icons/user'
 import { DollarSign } from '@geist-ui/icons'
 import { useAccount } from 'wagmi'
 import { useCallback, useEffect, useState } from 'react'
+import ms from 'ms'
 
 import { forHumans } from 'utils'
 import fetcher from 'utils/fetcher'
@@ -338,6 +339,7 @@ const transferAndBid = async ({
     let { data, error } = await createBid({
       transferId,
       auctionId,
+      endAt: new Date().toISOString(),
     })
 
     console.log(data, error)
