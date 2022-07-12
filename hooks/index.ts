@@ -15,7 +15,7 @@ const fetcher = async (url: string) => {
 }
 
 export const useAuction = (args?: any) => {
-  let url = 'https://getaux-staging.imxrarity.io/v1/auctions'
+  let url = 'https://getaux-staging.imxrarity.io/v1/auctions?status=active'
 
   if (args?.collection) {
     url = `${url}?collection=${args.collection}`

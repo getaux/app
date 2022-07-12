@@ -121,7 +121,7 @@ const TimePopover = ({ onChange }: { onChange: any }) => {
 
 const EndAt = ({ onChange }: { onChange: any }) => {
   const [time, setTime] = useState(times[0])
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'))
   const [until, setUntil] = useState<any>()
 
   useEffect(() => {
