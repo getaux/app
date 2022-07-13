@@ -270,8 +270,8 @@ export default function Page() {
                 <div className="">
                   <SubTitle>Bids</SubTitle>
                   <div className="max-h-48 space-y-4 overflow-auto px-2 py-4">
-                    {auction?.bids?.reverse()?.map((item) => (
-                      <Bid item={item} />
+                    {auction?.bids?.reverse()?.map((item: AuctionBid, index: number) => (
+                      <Bid key={index} item={item} />
                     ))}
                   </div>
                 </div>
@@ -339,8 +339,6 @@ const transferAndBid = async ({
       transferId,
       auctionId,
     })
-
-    console.log(data, error)
 
     if (error) {
       let { message } = error
