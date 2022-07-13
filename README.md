@@ -7,9 +7,9 @@
 ## Install locally
 
 - `git clone git@github.com:getaux/app.git`
-- `npm install`
+- `yarn`
 - `cp .env.dist .env.local`
 
 ## Run locally
 
-- `npm run dev`
+- `yarn dev`
