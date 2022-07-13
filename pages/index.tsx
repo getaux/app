@@ -17,8 +17,8 @@ import toast from 'utils/toast'
 const Home: NextPage = () => {
   const { data, error } = useAuction({
     status: 'active',
-    orderBy: 'createdAt',
-    direction: 'desc'
+    orderBy: 'endAt',
+    direction: 'asc'
   })
   const router = useRouter()
 
