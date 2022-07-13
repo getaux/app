@@ -15,7 +15,11 @@ import { useEffect } from 'react'
 import toast from 'utils/toast'
 
 const Home: NextPage = () => {
-  const { data, error } = useAuction()
+  const { data, error } = useAuction({
+    status: 'active',
+    order_by: 'createdAt',
+    direction: 'desc'
+  })
   const router = useRouter()
 
   const randomAuctionId = data?.result?.map((x) => x.id)[

@@ -7,8 +7,7 @@ const fetcher = async (url: string) => {
 
   if (!res.ok) {
     const json = await res.json()
-    const error = new Error(json?.error || 'Network error')
-    throw error
+    throw new Error(json?.error || 'Network error')
   }
 
   return res.json()
@@ -17,8 +16,10 @@ const fetcher = async (url: string) => {
 export const useAuction = (args?: any) => {
   let url = 'https://getaux-staging.imxrarity.io/v1/auctions'
 
-  if (args?.collection) {
-    url = `${url}?collection=${args.collection}`
+  if(args){
+    Object.keys(args).forEach((key: any, index: number) => {
+      url = `${url}${index === 0 ? '?' : '&'}${key}=${args[key]}`
+    })
   }
 
   const { data, error } = useSWR<AuctionResponse, any>(url, fetcher)
