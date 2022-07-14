@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import useConnectAndSign from 'hooks/useConnectAndSign'
+import { apiEndpoint } from "../utils/api";
 
 type CancelAuctionPayload = {
   publicKey: string
@@ -18,7 +19,7 @@ const cancelAuction = async (
     body: JSON.stringify(payload),
   }
 
-  let url = `https://getaux-staging.imxrarity.io/v1/auctions/${auctionId}`
+  let url = `${apiEndpoint}/auctions/${auctionId}`
   let res = await fetch(url, options)
   let json = await res.json()
   if (res.status !== 200) {

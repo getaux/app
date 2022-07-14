@@ -272,7 +272,7 @@ import createAuction from 'utils/createAuction'
 //     body: JSON.stringify(payload),
 //   }
 
-//   let url = 'https://getaux-staging.imxrarity.io/v1/auctions'
+//   let url = `${apiEndpoint}/auctions`
 //   let res = await fetch(url, options)
 //   let json = await res.json()
 //   if (res.status !== 200) {

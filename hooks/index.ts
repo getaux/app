@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 
 import { AuctionResponse } from '../types/auction'
+import { apiEndpoint } from "../utils/api";
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -14,7 +15,7 @@ const fetcher = async (url: string) => {
 }
 
 export const useAuction = (args?: any) => {
-  let url = 'https://getaux-staging.imxrarity.io/v1/auctions'
+  let url = `${apiEndpoint}/auctions`
 
   if(args){
     Object.keys(args).forEach((key: any, index: number) => {

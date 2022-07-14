@@ -28,6 +28,7 @@ import PricingInput from 'components/pricing-input'
 import CurrencyType from 'types/currencyType'
 import toast from 'utils/toast'
 import useCountdown from 'hooks/useCountdown'
+import { apiEndpoint } from "../../../utils/api";
 
 const useCollection = (id: string) => {
   const { data, error } = useSWR<Collection, any>(
@@ -74,7 +75,7 @@ const useAuction = () => {
   const { id } = router.query
 
   const { data, error, mutate } = useSWR<AuctionItem, any>(
-    id && `https://getaux-staging.imxrarity.io/v1/auctions/${id}`,
+    id && `${apiEndpoint}/auctions/${id}`,
     fetcher
   )
   return { data, error, isLoading: !data && !error, mutate }
