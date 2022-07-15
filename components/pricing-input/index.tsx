@@ -85,7 +85,7 @@ const TokensDropdown = ({ onChange }: { onChange: any }) => {
         />
       </Dropdown.Button>
       <Dropdown.Menu
-        disabledKeys={data?.result?.filter((x: any) => x.symbol !== 'ETH').map((x: any) => x.symbol)}
+        disabledKeys={data?.result?.filter((x: any) => x?.symbol !== 'ETH').map((x: any) => x?.symbol)}
         //disabledKeys={['ETH']}
         onAction={(key) => {
           const selected = data.result.find((x: any) => x.name === key)
