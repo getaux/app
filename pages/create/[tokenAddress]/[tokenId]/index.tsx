@@ -250,6 +250,7 @@ const AuctionTypeDropdown = ({ onChange }: { onChange: any }) => {
           </Button>
         </Dropdown.Trigger>
         <Dropdown.Menu
+          disabledKeys={[AuctionType.Dutch]}
           onAction={(e) => {
             setType(e as AuctionType)
             onChange && onChange(e)
