@@ -337,7 +337,7 @@ const transferAndCreateAuction = async (req: CreateAuctionRequest) => {
 const CreateAuctionContent = () => {
   const [loading, setLoading] = useState(false)
   const [endAt, setEndAt] = useState(
-    new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
+    new Date().toISOString()
   )
   const [pricing, setPricing] = useState<any>()
   const [auctionType, setAuctionType] = useState('english')

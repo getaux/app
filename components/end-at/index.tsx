@@ -7,6 +7,11 @@ import Clock from '@geist-ui/icons/clock'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { parse } from 'date-fns'
 
+const roundUpTo = (time: number) => {
+  var interval = time * 60 * 1000
+  return new Date(Math.ceil(new Date().getTime() / interval) * interval)
+}
+
 const CalendarPopover = ({ onChange }: { onChange: any }) => {
   const [expiry, setExpiry] = useState(new Date())
   const [open, setOpen] = useState<boolean>(false)
@@ -60,7 +65,7 @@ const CalendarPopover = ({ onChange }: { onChange: any }) => {
 }
 
 const TimePopover = ({ onChange }: { onChange: any }) => {
-  const [time, setTime] = useState(times[0])
+  const [time, setTime] = useState<string>(format(roundUpTo(15), 'hh:mm a'))
   const [open, setOpen] = useState<boolean>(false)
   const [isFocued, setIsFocused] = useState<boolean>(false)
   return (
@@ -97,7 +102,8 @@ const TimePopover = ({ onChange }: { onChange: any }) => {
       >
         <div className="flex h-64 flex-col overflow-auto p-1 py-1 text-left text-sm">
           {times.map((x) => {
-            const disabled = parse(x, 'hh:mm a', new Date()).getTime() < new Date().getTime()
+            const disabled =
+              parse(x, 'hh:mm a', new Date()).getTime() < new Date().getTime()
 
             return (
               <PopoverClose style={{ width: '200px' }}>
@@ -132,7 +138,7 @@ const TimePopover = ({ onChange }: { onChange: any }) => {
 }
 
 const EndAt = ({ onChange }: { onChange: any }) => {
-  const [time, setTime] = useState(times[0])
+  const [time, setTime] = useState<string>(format(roundUpTo(15), 'hh:mm a'))
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'))
   const [until, setUntil] = useState<any>()
 
