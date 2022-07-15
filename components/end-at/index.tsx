@@ -5,6 +5,7 @@ import format from 'date-fns/format'
 import Calendar from '@geist-ui/icons/calendar'
 import Clock from '@geist-ui/icons/clock'
 import { PopoverClose } from '@radix-ui/react-popover'
+import { parse } from 'date-fns'
 
 const CalendarPopover = ({ onChange }: { onChange: any }) => {
   const [expiry, setExpiry] = useState(new Date())
@@ -95,24 +96,35 @@ const TimePopover = ({ onChange }: { onChange: any }) => {
         style={{ background: '#EFF0F3' }}
       >
         <div className="flex h-64 flex-col overflow-auto p-1 py-1 text-left text-sm">
-          {times.map((x) => (
-            <PopoverClose style={{ width: '200px' }}>
-              <div
-                key={x}
-                onClick={(_) => {
-                  setTime(x)
-                  setOpen(false)
-                  setIsFocused(false)
-                  onChange(x)
-                }}
-                className={`w-44 rounded py-1 pl-4 text-left text-gray-700 hover:bg-gray-200 hover:text-gray-900 ${
-                  x === time ? 'bg-gray-100' : ''
+          {times.map((x) => {
+            const disabled = parse(x, 'hh:mm a', new Date()).getTime() < new Date().getTime()
+
+            return (
+              <PopoverClose style={{ width: '200px' }}>
+                <div
+                  key={x}
+                  onClick={(_) => {
+                    if (disabled) return
+                    setTime(x)
+                    setOpen(false)
+                    setIsFocused(false)
+                    onChange(x)
+                  }}
+                  className={`w-44 rounded py-1 pl-4 text-left text-gray-700 hover:bg-gray-200 hover:text-gray-900 ${
+                    x === time ? 'bg-gray-100' : ''
+                  }
+                
+                ${
+                  disabled
+                    ? 'cursor-not-allowed text-gray-300 hover:text-gray-300'
+                    : ''
                 }`}
-              >
-                {x}
-              </div>
-            </PopoverClose>
-          ))}
+                >
+                  {x}
+                </div>
+              </PopoverClose>
+            )
+          })}
         </div>
       </PopoverContent>
     </Popover>
