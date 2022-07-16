@@ -27,6 +27,7 @@ import PricingInput from 'components/pricing-input'
 import CurrencyType from 'types/currencyType'
 import toast from 'utils/toast'
 import useCountdown from 'hooks/useCountdown'
+import { apiEndpoint } from "../../../utils/api";
 
 const useCollection = (id: string) => {
   const { data, error } = useSWR<Collection, any>(
@@ -73,7 +74,7 @@ const useAuction = () => {
   const { id } = router.query
 
   const { data, error, mutate } = useSWR<AuctionItem, any>(
-    id && `https://getaux-staging.imxrarity.io/v1/auctions/${id}`,
+    id && `${apiEndpoint}/auctions/${id}`,
     fetcher
   )
   return { data, error, isLoading: !data && !error, mutate }
@@ -269,8 +270,8 @@ export default function Page() {
                 <div className="">
                   <SubTitle>Bids</SubTitle>
                   <div className="max-h-48 space-y-4 overflow-auto px-2 py-4">
-                    {auction?.bids?.reverse()?.map((item) => (
-                      <Bid item={item} />
+                    {auction?.bids?.reverse()?.map((item: AuctionBid, index: number) => (
+                      <Bid key={index} item={item} />
                     ))}
                   </div>
                 </div>
@@ -339,8 +340,6 @@ const transferAndBid = async ({
       auctionId,
       endAt: new Date().toISOString(),
     })
-
-    console.log(data, error)
 
     if (error) {
       let { message } = error

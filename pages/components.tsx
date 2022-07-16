@@ -1,10 +1,10 @@
-import { ERC20TokenType, ERC721TokenType, ETHTokenType } from '@imtbl/imx-sdk'
+import { ERC721TokenType, ETHTokenType } from '@imtbl/imx-sdk'
 import toast from 'utils/toast'
 import { useImx, link } from 'utils/useImx'
 import CancelAuctionButton from 'components/cancel-auction-button'
 import { Avatar, Button, Loading, Input } from '@nextui-org/react'
 import { useState, useCallback, useEffect } from 'react'
-import { Dropdown, User } from '@nextui-org/react'
+import { Dropdown } from '@nextui-org/react'
 import useSWR from 'swr'
 import fetcher from 'utils/fetcher'
 
@@ -26,7 +26,7 @@ const createAuction = async (payload: AuctionPayload) => {
     body: JSON.stringify(payload),
   }
 
-  let url = 'https://getaux-staging.imxrarity.io/v1/auctions'
+  let url = `${apiEndpoint}/auctions`
   let res = await fetch(url, options)
   let json = await res.json()
   if (res.status !== 200) {
@@ -48,7 +48,7 @@ const createBid = async (request: BidPayload) => {
     body: JSON.stringify(request),
   }
 
-  let url = 'https://getaux-staging.imxrarity.io/v1/bids'
+  let url = `${apiEndpoint}/bids`
   let res = await fetch(url, options)
   let json = await res.json()
   if (res.status !== 200) {
@@ -349,6 +349,7 @@ const useCreateAuction = () => {
 
 import { toBn } from 'evm-bn'
 import Spacer from 'components/spacer'
+import {apiEndpoint} from "../utils/api";
 
 const useImmutableToken = () => {
   const { data, error } = useSWR(

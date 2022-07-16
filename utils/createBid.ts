@@ -1,5 +1,6 @@
 import axios from 'axios'
 import axiosRetry from 'axios-retry'
+import { apiEndpoint } from "./api";
 
 axiosRetry(axios, {
   retryDelay: axiosRetry.exponentialDelay,
@@ -23,7 +24,7 @@ const createBid = async (body: {
   endAt: string
 }): Promise<ApiResponse> => {
   return axios
-    .post('https://getaux-staging.imxrarity.io/v1/bids', body)
+    .post(`${apiEndpoint}/bids`, body)
     .then((response) => {
       return { data: response.data }
     })

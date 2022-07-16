@@ -15,7 +15,11 @@ import { useEffect } from 'react'
 import toast from 'utils/toast'
 
 const Home: NextPage = () => {
-  const { data, error } = useAuction()
+  const { data, error } = useAuction({
+    status: 'active',
+    orderBy: 'endAt',
+    direction: 'asc'
+  })
   const router = useRouter()
 
   const randomAuctionId = data?.result?.map((x) => x.id)[
@@ -86,8 +90,8 @@ const Home: NextPage = () => {
 
         <span className="px-4 text-xl font-bold">Auctions</span>
         <div className="z-50 grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
-          {data?.result?.slice(0, 12)?.map((item: AuctionItem) => {
-            return <Product item={item} />
+          {data?.result?.slice(0, 12)?.map((item: AuctionItem, index: number) => {
+            return <Product key={index} item={item} />
           })}
         </div>
       </Layout>
