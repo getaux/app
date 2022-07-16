@@ -15,11 +15,7 @@ const fetcher = async (url: string) => {
 }
 
 export const useAuction = (args?: any) => {
-<<<<<<< HEAD
-  let url = 'https://getaux-staging.imxrarity.io/v1/auctions?status=active'
-=======
-  let url = `${apiEndpoint}/auctions`
->>>>>>> main
+  let url = `${apiEndpoint}/auctions?status=active`
 
   if(args){
     Object.keys(args).forEach((key: any, index: number) => {

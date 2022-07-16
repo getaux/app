@@ -3,6 +3,7 @@ import createBid from 'utils/createBid'
   const { error, data } = await createBid({
     transferId: '4789686',
     auctionId: 62,
+    endAt: ''
   })
   if (error) {
     return console.log(error)
