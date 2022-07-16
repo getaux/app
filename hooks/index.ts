@@ -15,7 +15,7 @@ const fetcher = async (url: string) => {
 }
 
 export const useAuction = (args?: any) => {
-  let url = `${apiEndpoint}/auctions?status=active`
+  let url = `${apiEndpoint}/auctions`
 
   if(args){
     Object.keys(args).forEach((key: any, index: number) => {
