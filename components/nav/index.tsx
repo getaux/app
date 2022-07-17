@@ -28,12 +28,12 @@ const Nav = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar size={'sm'} src={'/1.jpg'} />
+                <Avatar size={'sm'} src={'/1.jpg'} pointer />
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" sideOffset={5}>
                 <Link href={'/account'}>
-                  <DropdownMenuItem>My aseets: {prettyHex(user)}</DropdownMenuItem>
+                  <DropdownMenuItem>My assets: {prettyHex(user)}</DropdownMenuItem>
                 </Link>
                 <Link href={'/account'}>
                   <DropdownMenuItem>My bids</DropdownMenuItem>

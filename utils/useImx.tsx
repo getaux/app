@@ -20,7 +20,7 @@ export const ImxContextProvider = (props: any) => {
           localStorage.setItem('address', address)
           setUser(address.toLowerCase())
         } else {
-          console.error('Failed to get addres from link.setup')
+          console.error('Failed to get address from link.setup')
         }
       }
       run()

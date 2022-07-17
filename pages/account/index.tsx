@@ -39,8 +39,8 @@ export default function Page() {
         </div>
         <Spacer />
         <div className="z-50 grid grid-cols-2 gap-6 p-4 md:grid-cols-3 lg:grid-cols-3">
-          {data?.result?.slice(0, 12)?.map((item: Asset) => {
-            return <Product item={item} />
+          {data?.result?.slice(0, 12)?.map((item: Asset, index: number) => {
+            return <Product key={index} item={item} />
           })}
         </div>
       </Layout>

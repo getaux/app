@@ -1,6 +1,7 @@
 import axios from 'axios'
 import axiosRetry from 'axios-retry'
 import CurrencyType from 'types/currencyType'
+import { apiEndpoint } from "./api";
 
 axiosRetry(axios, {
   retryDelay: axiosRetry.exponentialDelay,
@@ -36,7 +37,7 @@ const createAuction = async (
   body: CreateAuctionRequest
 ): Promise<ApiResponse> => {
   return axios
-    .post('https://getaux-staging.imxrarity.io/v1/auctions', body)
+    .post(`${apiEndpoint}/auctions`, body)
     .then((response) => {
       console.log(1)
       return { data: response.data }
