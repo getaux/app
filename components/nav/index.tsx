@@ -35,12 +35,12 @@ const Nav = () => {
                 <Link href={'/account'}>
                   <DropdownMenuItem>My assets: {prettyHex(user)}</DropdownMenuItem>
                 </Link>
-                <Link href={'/account'}>
+                {/* <Link href={'/account'}>
                   <DropdownMenuItem>My bids</DropdownMenuItem>
                 </Link>
                 <Link href={'/account'}>
                   <DropdownMenuItem>My auctions</DropdownMenuItem>
-                </Link>
+                </Link> */}
                 <DropdownMenuSeparator />
                 <a onClick={(_) => disconnect()}>
                   <DropdownMenuItem>Logout</DropdownMenuItem>
