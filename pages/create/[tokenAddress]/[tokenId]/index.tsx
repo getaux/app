@@ -156,6 +156,7 @@ const TokensDropdown = ({ onChange }: { onChange: any }) => {
         />
       </Dropdown.Button>
       <Dropdown.Menu
+        disabledKeys={data?.result?.filter((x: any) => x?.symbol !== 'ETH').map((x: any) => x?.symbol)}
         onAction={(key) => {
           const selected = data.result.find((x: any) => x.name === key)
           if (selected) {
@@ -166,7 +167,7 @@ const TokensDropdown = ({ onChange }: { onChange: any }) => {
         aria-label="Static Actions"
       >
         {data?.result?.map((x: any) => (
-          <Dropdown.Item className="truncate" key={x.name}>
+          <Dropdown.Item className="truncate" key={x.symbol}>
             <div className="flex items-center space-x-2">
               <Avatar size={'sm'} src={x?.image_url} />
               <span className="overflow-hidden truncate">{x.name}</span>
@@ -249,6 +250,7 @@ const AuctionTypeDropdown = ({ onChange }: { onChange: any }) => {
           </Button>
         </Dropdown.Trigger>
         <Dropdown.Menu
+          disabledKeys={[AuctionType.Dutch]}
           onAction={(e) => {
             setType(e as AuctionType)
             onChange && onChange(e)
@@ -336,7 +338,7 @@ const transferAndCreateAuction = async (req: CreateAuctionRequest) => {
 const CreateAuctionContent = () => {
   const [loading, setLoading] = useState(false)
   const [endAt, setEndAt] = useState(
-    new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
+    new Date().toISOString()
   )
   const [pricing, setPricing] = useState<any>()
   const [auctionType, setAuctionType] = useState('english')

@@ -5,6 +5,12 @@ import format from 'date-fns/format'
 import Calendar from '@geist-ui/icons/calendar'
 import Clock from '@geist-ui/icons/clock'
 import { PopoverClose } from '@radix-ui/react-popover'
+import { parse } from 'date-fns'
+
+const roundUpTo = (time: number) => {
+  var interval = time * 60 * 1000
+  return new Date(Math.ceil(new Date().getTime() / interval) * interval)
+}
 
 const CalendarPopover = ({ onChange }: { onChange: any }) => {
   const [expiry, setExpiry] = useState(new Date())
@@ -59,73 +65,85 @@ const CalendarPopover = ({ onChange }: { onChange: any }) => {
 }
 
 const TimePopover = ({ onChange }: { onChange: any }) => {
-  const [time, setTime] = useState(times[0])
-  const [open, setOpen] = useState<boolean>(false)
-  const [isFocued, setIsFocused] = useState<boolean>(false)
-  return (
-    <Popover open={open}>
-      <PopoverTrigger>
-        <button
-          onClick={(_) => {
-            setOpen((p) => !p)
-            console.log(open)
-            setIsFocused(true)
-          }}
-          className={`flex flex items-center space-x-2 rounded border border-white px-2 py-1 text-sm transition-all hover:border-gray-200 ${
-            isFocued ? 'bg-gray-100' : ''
-          }`}
-        >
-          <Clock color={'#666'} size={'18'} />
-          <span>{time}</span>
-        </button>
-      </PopoverTrigger>
+    const [time, setTime] = useState<string>(format(roundUpTo(15), 'hh:mm a'))
+    const [open, setOpen] = useState<boolean>(false)
+    const [isFocued, setIsFocused] = useState<boolean>(false)
+    return (
+        <Popover open={open}>
+            <PopoverTrigger>
+                <button
+                    onClick={(_) => {
+                        setOpen((p) => !p)
+                        console.log(open)
+                        setIsFocused(true)
+                    }}
+                    className={`flex flex items-center space-x-2 rounded border border-white px-2 py-1 text-sm transition-all hover:border-gray-200 ${
+                        isFocued ? 'bg-gray-100' : ''
+                    }`}
+                >
+                    <Clock color={'#666'} size={'18'} />
+                    <span>{time}</span>
+                </button>
+            </PopoverTrigger>
 
-      <PopoverContent
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => {
-          setOpen(false)
-          setIsFocused(false)
-        }}
-        onPointerDownOutside={(e) => {
-          setOpen(false)
-          setIsFocused(false)
-        }}
-        sideOffset={10}
-        align={'start'}
-        style={{ background: '#EFF0F3' }}
-      >
-        <div className="flex h-64 flex-col overflow-auto p-1 py-1 text-left text-sm">
-          {times.map((x: string, index: number) => (
-            <PopoverClose key={index} style={{ width: '200px' }}>
-              <div
-                key={x}
-                onClick={(_) => {
-                  setTime(x)
-                  setOpen(false)
-                  setIsFocused(false)
-                  onChange(x)
+            <PopoverContent
+                onOpenAutoFocus={(e) => e.preventDefault()}
+                onEscapeKeyDown={(e) => {
+                    setOpen(false)
+                    setIsFocused(false)
                 }}
-                className={`w-44 rounded py-1 pl-4 text-left text-gray-700 hover:bg-gray-200 hover:text-gray-900 ${
-                  x === time ? 'bg-gray-100' : ''
-                }`}
-              >
-                {x}
-              </div>
-            </PopoverClose>
-          ))}
-        </div>
-      </PopoverContent>
-    </Popover>
-  )
+                onPointerDownOutside={(e) => {
+                    setOpen(false)
+                    setIsFocused(false)
+                }}
+                sideOffset={10}
+                align={'start'}
+                style={{ background: '#EFF0F3' }}
+            >
+                <div className="flex h-64 flex-col overflow-auto p-1 py-1 text-left text-sm">
+                    {times.map((x) => {
+                        const disabled =
+                            parse(x, 'hh:mm a', new Date()).getTime() < new Date().getTime()
+
+                        return (
+                            <PopoverClose style={{ width: '200px' }}>
+                                <div
+                                    key={x}
+                                    onClick={(_) => {
+                                        if (disabled) return
+                                        setTime(x)
+                                        setOpen(false)
+                                        setIsFocused(false)
+                                        onChange(x)
+                                    }}
+                                    className={`w-44 rounded py-1 pl-4 text-left text-gray-700 hover:bg-gray-200 hover:text-gray-900 ${
+                                        x === time ? 'bg-gray-100' : ''
+                                    }
+                
+                ${
+                                        disabled
+                                            ? 'cursor-not-allowed text-gray-300 hover:text-gray-300'
+                                            : ''
+                                    }`}
+                                >
+                                    {x}
+                                </div>
+                            </PopoverClose>
+                        )
+                    })}
+                </div>
+            </PopoverContent>
+        </Popover>
+    )
 }
 
 const EndAt = ({ onChange }: { onChange: any }) => {
-  const [time, setTime] = useState(times[0])
-  const [date, setDate] = useState()
+  const [time, setTime] = useState<string>(format(roundUpTo(15), 'hh:mm a'))
+  const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'))
   const [until, setUntil] = useState<any>()
 
   useEffect(() => {
-    if (date && time) {
+    if (date || time) {
       console.log(date, time)
       onChange && onChange(new Date(`${date} ${time}`))
     }

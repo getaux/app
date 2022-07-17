@@ -21,6 +21,7 @@ type ApiResponse = {
 const createBid = async (body: {
   transferId: string
   auctionId: number
+  endAt: string
 }): Promise<ApiResponse> => {
   return axios
     .post(`${apiEndpoint}/bids`, body)

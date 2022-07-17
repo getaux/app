@@ -85,6 +85,7 @@ const TokensDropdown = ({ onChange }: { onChange: any }) => {
         />
       </Dropdown.Button>
       <Dropdown.Menu
+        disabledKeys={data?.result?.filter((x: any) => x?.symbol !== 'ETH').map((x: any) => x?.symbol)}
         //disabledKeys={['ETH']}
         onAction={(key) => {
           const selected = data.result.find((x: any) => x.name === key)
@@ -96,7 +97,7 @@ const TokensDropdown = ({ onChange }: { onChange: any }) => {
         aria-label="Static Actions"
       >
         {data?.result?.map((x: any) => (
-          <Dropdown.Item className="truncate" key={x.name}>
+          <Dropdown.Item className="truncate" key={x.symbol}>
             <div className="flex items-center space-x-2">
               <Avatar size={'sm'} src={x?.image_url} />
               <span className="overflow-hidden truncate">{x.name}</span>

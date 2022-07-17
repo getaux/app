@@ -7,7 +7,6 @@ import { link } from 'utils/useImx'
 import React from 'react'
 import { Modal, Text } from '@nextui-org/react'
 import User from '@geist-ui/icons/user'
-import { DollarSign } from '@geist-ui/icons'
 import { useAccount } from 'wagmi'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -339,6 +338,7 @@ const transferAndBid = async ({
     let { data, error } = await createBid({
       transferId,
       auctionId,
+      endAt: new Date().toISOString(),
     })
 
     if (error) {
