@@ -16,7 +16,14 @@ const Nav = () => {
   // @ts-expect-error
   const { user, disconnect, connect } = useImx()
   return (
-    <div className="z-100 border-2 border-b border-gray-50">
+    <div className="z-100 border-2 border-b border-gray-50 border-b-2">
+
+      {process.env.NEXT_PUBLIC_NETWORK === 'ropsten' ? (
+        <div className="mx-auto flex items-center justify-center border-b-2 text-neutral-500 text-sm py-2">
+            You're browsing our ropsten app
+        </div>
+      ) : ('')}
+
       <div className="mx-auto max-w-4xl">
         <div className="flex w-full items-center justify-between p-4">
           <Link href={'/'}>
