@@ -389,7 +389,7 @@ const CreateAuctionContent = () => {
         throw Error((error as any).message)
       }
 
-      toast.success('Auction created. Rediecting...')
+      toast.success('Auction created. Redirecting...')
 
       setTimeout(() => {
         router.push(`/auction/${response?.id}`)
