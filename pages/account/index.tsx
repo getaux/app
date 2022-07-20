@@ -38,7 +38,7 @@ export default function Page() {
           </span>
         </div>
         <Spacer />
-        <div className="z-50 grid grid-cols-2 gap-6 p-4 md:grid-cols-3 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-6 p-4 md:grid-cols-3 lg:grid-cols-3">
           {data?.result?.slice(0, 12)?.map((item: Asset, index: number) => {
             return <Product key={index} item={item} />
           })}
