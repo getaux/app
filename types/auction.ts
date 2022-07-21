@@ -1,10 +1,18 @@
 export interface AuctionAsset {
   id: number
   internalId: string
-  tokenAddress: string
+  collection: Collection
   imageUrl: string
   name: string
   tokenId: string
+}
+
+export interface Collection {
+  id: number
+  address: string
+  description?: string
+  image?: string
+  name: string
 }
 
 export interface AuctionBid {
@@ -19,6 +27,7 @@ export enum AuctionStatus {
   Active = 'active',
   Cancelled = 'cancelled',
   Filled = 'filled',
+  Scheduled = 'scheduled',
 }
 
 export interface AuctionItem {

@@ -112,10 +112,10 @@ export default function Page() {
   const { id } = router.query
   const { data: auction } = useAuction()
   const { data: collection } = useCollection(
-    auction?.asset?.tokenAddress as string
+    auction?.asset?.collection?.address as string
   )
 
-  const tokenAddress = auction?.asset?.tokenAddress
+  const tokenAddress = auction?.asset?.collection?.address
   const tokenId = auction?.asset?.tokenId
 
   const owner = auction?.owner
