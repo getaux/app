@@ -20,6 +20,7 @@ import { link } from 'utils/useImx'
 import toast from 'utils/toast'
 import EndAt from 'components/end-at'
 import Nav from 'components/nav'
+import { imxEndpoint } from "utils/imx";
 
 export default function Page() {
   return (
@@ -42,7 +43,7 @@ const PreviewAuction = () => {
   const { data } = useSWR(
     tokenId &&
       tokenAddress &&
-      `https://api.ropsten.x.immutable.com/v1/assets/${tokenAddress}/${tokenId}`,
+      `${imxEndpoint}/v1/assets/${tokenAddress}/${tokenId}`,
     fetcher
   )
   return (
@@ -79,7 +80,7 @@ enum CurrencyType {
 
 const useImmutableToken = () => {
   const { data, error } = useSWR(
-    'https://api.ropsten.x.immutable.com/v1/tokens',
+    `${imxEndpoint}/v1/tokens`,
     fetcher
   )
 
