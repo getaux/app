@@ -46,7 +46,7 @@ export default function Page() {
         </div>
 
         <span className="px-4 text-xl font-bold">Auctions</span>
-        <div className="z-50 grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
           {auction?.result?.map((item: AuctionItem) => {
             return <Product item={item} />
           })}

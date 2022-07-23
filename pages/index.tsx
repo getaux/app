@@ -13,6 +13,7 @@ import Nav from 'components/nav'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import toast from 'utils/toast'
+import Footer from "../components/footer";
 
 const Home: NextPage = () => {
   const { data, error } = useAuction({
@@ -53,7 +54,7 @@ const Home: NextPage = () => {
         >
           <Gradient />
         </div> */}
-        <div className="z-50 flex flex-col py-36">
+        <div className="flex flex-col py-36">
           <div className="flex flex-col items-center justify-center text-center">
             <Logo size={'120px'} />
             <div className="my-2 flex items-center">
@@ -89,12 +90,15 @@ const Home: NextPage = () => {
         </div>
 
         <span className="px-4 text-xl font-bold">Auctions</span>
-        <div className="z-50 grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
           {data?.result?.slice(0, 12)?.map((item: AuctionItem, index: number) => {
             return <Product key={index} item={item} />
           })}
         </div>
       </Layout>
+
+      <Footer />
+
     </div>
   )
 }
