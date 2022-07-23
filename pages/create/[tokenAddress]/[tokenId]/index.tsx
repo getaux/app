@@ -189,7 +189,11 @@ const QuantityInput = ({ onChange }: { onChange: any }) => {
   // set the initial token: ETH
   useEffect(() => {
     if (data?.result?.length) {
-      setToken(data.result[0])
+      data.result.forEach((token: any) => {
+        if(token.symbol === 'ETH'){
+          setToken(token)
+        }
+      })
     }
   }, [data])
 
@@ -233,8 +237,9 @@ const AuctionTypeDropdown = ({ onChange }: { onChange: any }) => {
     <>
       <Text h2>Auction Type</Text>
       <Text small css={{ color: '#999' }}>
-      English auction. Sell to the highest bidder: the highest bid wins at the end
-      Ducth. Sell with a declining price: the price falls until someone purchases
+      <b>English:</b> Sell to the highest bidder: the highest bid wins at the end.
+      <Spacer y={0}/>
+      <b>Dutch:</b> Sell with a declining price: the price falls until someone purchases.
 
       </Text>
       <Spacer />
