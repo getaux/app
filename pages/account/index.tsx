@@ -5,6 +5,7 @@ import { useImx } from 'utils/useImx'
 import Link from 'next/link'
 import Layout from 'components/layout'
 import { Button, Spacer, Text, Image } from '@nextui-org/react'
+import { imxEndpoint } from "utils/imx";
 
 type Asset = {
   name: string
@@ -19,9 +20,9 @@ export default function Page() {
   const { user } = useImx()
   const { data } = useSWR(
     user &&
-       `https://api.ropsten.x.immutable.com/v1/assets?user=${user}&direction=asc&order_by=name`,
+       `${imxEndpoint}/v1/assets?user=${user}&direction=asc&order_by=name`,
 
-      //`https://api.ropsten.x.immutable.com/v1/assets?user=${user}&direction=asc&order_by=name&collection=0x9f6ceedacc84e8266c3e7ce6f7bcbf7d1de39501`, // user: 0x0f90387fc8df00c5d519081b7a6e977fcae03eca
+      //`${imxEndpoint}/v1/assets?user=${user}&direction=asc&order_by=name&collection=0x9f6ceedacc84e8266c3e7ce6f7bcbf7d1de39501`, // user: 0x0f90387fc8df00c5d519081b7a6e977fcae03eca
     fetcher
   )
   return (

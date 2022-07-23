@@ -349,11 +349,12 @@ const useCreateAuction = () => {
 
 import { toBn } from 'evm-bn'
 import Spacer from 'components/spacer'
-import {apiEndpoint} from "../utils/api";
+import { apiEndpoint } from "utils/api";
+import { imxEndpoint } from "utils/imx";
 
 const useImmutableToken = () => {
   const { data, error } = useSWR(
-    'https://api.ropsten.x.immutable.com/v1/tokens',
+    `${imxEndpoint}/v1/tokens`,
     fetcher
   )
 

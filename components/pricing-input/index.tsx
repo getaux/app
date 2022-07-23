@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react'
 import { Dropdown } from '@nextui-org/react'
 import useSWR from 'swr'
 import fetcher from 'utils/fetcher'
-import { toBn } from 'evm-bn'
+import { imxEndpoint } from "utils/imx";
 
 const useImmutableToken = () => {
   const { data, error } = useSWR(
-    'https://api.ropsten.x.immutable.com/v1/tokens',
+    `${imxEndpoint}/v1/tokens`,
     fetcher
   )
 

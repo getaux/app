@@ -27,11 +27,12 @@ import PricingInput from 'components/pricing-input'
 import CurrencyType from 'types/currencyType'
 import toast from 'utils/toast'
 import useCountdown from 'hooks/useCountdown'
-import { apiEndpoint } from "../../../utils/api";
+import { apiEndpoint } from "utils/api";
+import { imxEndpoint } from "utils/imx";
 
 const useCollection = (id: string) => {
   const { data, error } = useSWR<Collection, any>(
-    id && `https://api.ropsten.x.immutable.com/v1/collections/${id}`,
+    id && `${imxEndpoint}/v1/collections/${id}`,
     fetcher
   )
 

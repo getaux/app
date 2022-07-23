@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-
 import { useAuction } from 'hooks'
 import useSWR from 'swr'
 import fetcher from 'utils/fetcher'
@@ -9,10 +8,11 @@ import Spacer from 'components/spacer'
 import Product from 'components/product'
 import { AuctionItem } from 'types/auction'
 import Nav from 'components/nav'
+import { imxEndpoint } from "utils/imx";
 
 const useCollection = (id: string) => {
   const { data, error } = useSWR<Collection, any>(
-    id && `https://api.ropsten.x.immutable.com/v1/collections/${id}`,
+    id && `${imxEndpoint}/v1/collections/${id}`,
     fetcher
   )
 
