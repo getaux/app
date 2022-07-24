@@ -20,16 +20,19 @@ const Product = ({ item }: { item: AuctionItem }) => {
   const { remaining } = useCountdown(new Date(endAt as Date))
 
   let highestBid
-  let highestBidString
+  let price
   let ending
+  let hasHighestBid = false
 
   if (item?.bids?.length) {
     highestBid = item?.bids?.reduce(function (prev, current) {
       return Number(prev?.quantity) > Number(current?.quantity) ? prev : current
     })
 
-    highestBidString =
-      Number(highestBid?.quantity) / parseFloat(`1e${item?.decimals}`)
+    price = Number(highestBid?.quantity || item?.quantity) / parseFloat(`1e${item?.decimals}`)
+    hasHighestBid = true
+  } else {
+    price = Number(item?.quantity) / parseFloat(`1e${item?.decimals}`)
   }
 
   ending = forHumans(
@@ -73,10 +76,10 @@ const Product = ({ item }: { item: AuctionItem }) => {
           >
             {getPriceIcon(tokenType)}
             <span className="elipsis ml-1 text-lg font-bold text-gray-900">
-              {highestBidString ? highestBidString : '-'}
+              {price ? price : '-'}
             </span>
             <span className="ml-2 text-xs text-gray-400">
-              {highestBidString ? 'highest bid' : 'no bids yet'}
+              {hasHighestBid ? 'highest bid' : 'minimum bid'}
             </span>
           </div>
         </div>

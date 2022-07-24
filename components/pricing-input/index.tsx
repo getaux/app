@@ -23,7 +23,7 @@ const PricingInput = ({ onChange }: { onChange: any }) => {
   // set the initial token: ETH
   useEffect(() => {
     if (data?.result?.length) {
-      setToken(data.result[0])
+      setToken(data.result[1])
     }
   }, [data])
 
@@ -67,7 +67,7 @@ const TokensDropdown = ({ onChange }: { onChange: any }) => {
 
   useEffect(() => {
     if (data?.result?.length) {
-      setSelected(data.result[0])
+      setSelected(data.result[1])
     }
   }, [data])
 

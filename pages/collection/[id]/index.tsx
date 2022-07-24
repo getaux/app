@@ -23,7 +23,7 @@ export default function Page() {
   const router = useRouter()
   const { id } = router.query
 
-  const { data: auction } = useAuction({ collection: id })
+  const { data: auction } = useAuction({ collection: id, status: 'active', orderBy: 'endAt', direction: 'asc' })
   const { data: collection } = useCollection(id as string)
 
   return (

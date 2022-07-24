@@ -139,7 +139,7 @@ const TokensDropdown = ({ onChange }: { onChange: any }) => {
 
   useEffect(() => {
     if (data?.result?.length) {
-      setSelected(data.result[0])
+      setSelected(data.result[1])
     }
   }, [data])
 
