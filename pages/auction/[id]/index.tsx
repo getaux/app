@@ -122,8 +122,6 @@ export default function Page() {
   const owner = auction?.owner
   const isActive = auction?.status == AuctionStatus.Active
 
-  console.log(isActive, isOwner, owner, address)
-
   useEffect(() => {
     if (
       address?.toLocaleLowerCase() === (owner as string)?.toLocaleLowerCase()
